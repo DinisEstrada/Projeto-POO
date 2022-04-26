@@ -124,12 +124,12 @@ public class Interpreter {
                             float custo = Float.parseFloat(parser[4]);
                             int dimensao = Integer.parseInt(parser[6]);
                             float valor_fixo = Float.parseFloat(parser[7]);
-                            int tone=0;
+                            int tone = 1;
 
                             switch (parser[5]){
-                                case "neutral" :  tone = SmartBulb.NEUTRAL;
-                                case "warm" :  tone = SmartBulb.WARM;
-                                case "cold" :  tone = SmartBulb.COLD;
+                                case "warm" -> {tone = 2;}
+                                case "neutral" -> {tone = 1;}
+                                case "cold" -> {tone = 0;}
                             }
 
                             smt = new SmartBulb(parser[2], state, custo, tone, dimensao, valor_fixo);
@@ -193,50 +193,6 @@ public class Interpreter {
         return speaker_config;
     }
 
-/*
-    public HashMap<String, String> lista_casasEdivisoes(){
-        HashMap<String,String> houses_config = new HashMap<>();
-
-        try {
-            Scanner sc = new Scanner(this.configfile);
-            String file_line;
-            String[] parser;
-            while (sc.hasNextLine()){
-                file_line= sc.nextLine();
-                parser= file_line.split(";");
-                if(parser[0].equals("houses-config")) houses_config.put(parser[1], Float.parseFloat(parser[2]));
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred. File not located or not open correctly");
-        }
-
-        return houses_config;
-
-    }
-
-
-    public List<String> getHouses(){
-        List<String> houses =  new ArrayList<>();
-
-
-
-        return houses;
-
-    }
-
-     public CasaInteligente createhouse(String housename){
-
-
-     }
-
-    public List<SmartDevice> lista_dvs(String Casa){
-
-    }
-
-    public List<SmartDevice> lista_dvs_divisao(String divisao){
-
-    }*/
-
     public Set<String> casas(){
         return creator().keySet();
     }
@@ -245,7 +201,4 @@ public class Interpreter {
         return creator().get(housename);
     }
 
-
-
 }
-
