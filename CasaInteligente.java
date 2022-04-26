@@ -110,7 +110,16 @@ public class CasaInteligente {
     }
 
 
-    //equals()
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CasaInteligente)) return false;
+        CasaInteligente casa = (CasaInteligente) o;
+        return ( this.owner.equals(casa.getOwner()) &&
+                this.nif.equals(casa.getNif()) &&
+                this.devices.equals(casa.getDevices()) &&
+                this.locations.equals(casa.getLocations()));
+    }
+    
     public String toString(){
         StringBuilder sb = new StringBuilder();
         sb.append("\n### House ###")
@@ -220,3 +229,4 @@ public class CasaInteligente {
     }
     
 }
+
