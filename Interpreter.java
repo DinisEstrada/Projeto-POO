@@ -122,9 +122,15 @@ public class Interpreter {
                         case "smtblb" -> {
                             boolean state = Boolean.parseBoolean(parser[3]);
                             float custo = Float.parseFloat(parser[4]);
-                            int tone = Integer.parseInt(parser[5]);
                             int dimensao = Integer.parseInt(parser[6]);
                             float valor_fixo = Float.parseFloat(parser[7]);
+                            int tone=0;
+
+                            switch (parser[5]){
+                                case "neutral" :  tone = SmartBulb.NEUTRAL;
+                                case "warm" :  tone = SmartBulb.WARM;
+                                case "cold" :  tone = SmartBulb.COLD;
+                            }
 
                             smt = new SmartBulb(parser[2], state, custo, tone, dimensao, valor_fixo);
 
@@ -239,6 +245,7 @@ public class Interpreter {
         return creator().get(housename);
     }
 
-    
+
 
 }
+
