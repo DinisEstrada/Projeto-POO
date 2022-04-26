@@ -1,9 +1,6 @@
-//modelo do config file
-
-#houses-config
-##casa1;Jose Fonte;111111111;sala-cozinha-quarto
-##casa2;Dinis Vieira;222222222;sala-cozinha-quarto1-quarto2
-##casa3;Diogo Manuel;333333333;sala-cozinha-quarto1-sotao
+houses-config;casa1;Jose Fonte;111111111;sala-cozinha-quarto
+houses-config;casa2;Dinis Vieira;222222222;sala-cozinha-quarto1-quarto2
+houses-config;casa3;Diogo Manuel;333333333;sala-cozinha-quarto1-sotao
 
 casa1;sala;smtblb-1001;false;1.3f;neutral;3;1.5f
 casa1;cozinha;smtspk-1001;false;1.5f;10;RFM;Sony
@@ -24,7 +21,7 @@ casa3;sotao;smtcmr-3001;true;1.3f;1080;10
 
 
 #speaker-brands-config
-JBL;3.12
-Wonderboom;2.5
-Sony;4.2
-Marshall;1.5
+speaker-brands-config;JBL;3.12
+speaker-brands-config;Wonderboom;2.5
+speaker-brands-config;Sony;4.2
+speaker-brands-config;Marshall;1.5
