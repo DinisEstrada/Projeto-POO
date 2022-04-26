@@ -1,12 +1,11 @@
-
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
 
 
 /**
- * A CasaInteligente faz a gestão dos SmartDevices que existem e dos 
- * espaços (as salas) que existem na casa.
+ * A CasaInteligente faz a gestão dos SmartDevices que existem e dos espaços (as salas) que existem na casa.
  *
  * @author josefonte
  * @version 0.1
@@ -76,19 +75,20 @@ public class CasaInteligente {
     }
 
     public Map<String, SmartDevice> getDevices() {
-        Map<String, SmartDevice> ndevices = new HashMap<>(this.devices);
-
-        return ndevices;
+        Map<String, SmartDevice> devices_copy = new HashMap<>(this.devices);
+        return devices_copy;
     }
 
     public Map<String, List<String>> getLocations() {
-        return null;
+        Map<String, List<String>> locations_copy = new HashMap<>(this.locations);
+        return locations_copy;
     }
 
-    public void setDeviceOn(String devCode) {
-        this.devices.get(devCode).turnOn();
+    
+    public void setDeviceOn(String id) {
+        this.devices.get(id).turnOn();
     }
-    public void setDeviceOFF(String devCode) {this.devices.get(devCode).turnOff();}
+    public void setDeviceOFF(String id) {this.devices.get(id).turnOff();}
     
     public boolean existsDevice(String id) {return this.devices.containsKey(id);}
     
@@ -96,23 +96,67 @@ public class CasaInteligente {
     public void removeDevice(SmartDevice s) {this.devices.remove(s.getID());}
     
     public SmartDevice getDevice(String id) {return this.devices.get(id);}
-    
+
     public void setRoomOn(String room, boolean b) {
+        for (String id : this.locations.get(room)){
+            this.devices.get(id).setOn(b);
+        }
+    }
+
+    public void turnRoomOn(String room){
+        setRoomOn(room,true);
+    }
+
+    public void turnRoomOff(String room){
+        setRoomOn(room,false);
+    }
+
+    public void setAllOn(boolean b) {
+        for(String room : this.locations.keySet())
+            for (String id : this.locations.get(room))
+                this.devices.get(id).setOn(b);
+    }
+
+    public void turnAllOn(){
+        setAllOn(true);
+    }
+
+    public void turnAllOff(){
+        setAllOn(false);
+    }
 
 
+    public void addRoom(String s) {
+        List<String> ids = new ArrayList<>();
+        this.locations.put(s,ids);
     }
     
-    public void setAllOn(boolean b) {}
+    public void addRoom(String room, List<String> ids){
+        this.locations.put(room,ids);
+    }
     
-    public void addRoom(String s) {}
+    public boolean hasRoom(String room) {return this.locations.containsKey(room);}
     
-    public boolean hasRoom(String s) {return false;}
+    public void addDeviceToRoom (String room, String id) {this.locations.get(room).add(id);}
+    public void removeDeviceToRoom (String room, String id) {this.locations.get(room).remove(id);}
     
-    public void addToRoom (String s1, String s2) {}
-    
-    public boolean roomHasDevice (String s1, String s2) {return false;}
+    public boolean roomHasDevice (String room, String id) {return this.locations.get(room).contains(id);}
 
 
-    //estatisticas
+    public float consumoRoom(String room){
+        float consumo = 0;
+        for (String id : this.locations.get(room)){
+            if (this.devices.get(id).getOn()) consumo += this.devices.get(id).getConsumo();
+        }
+        return consumo;
+    }
+    
+    public float consumoCasa(){
+        float consumo = 0;
+        for(String room : this.locations.keySet()){
+            consumo += consumoRoom(room);
+        }
+        return consumo;
+    }
     
 }
