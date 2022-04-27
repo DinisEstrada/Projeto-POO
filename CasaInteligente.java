@@ -219,34 +219,14 @@ public class CasaInteligente {
 
     public float consumoRoom(String room){
         float consumo = 0;
-
-        if (this.fornecedor instanceof FornecedorA){
-            for (String id : this.locations.get(room)){
-                if (this.devices.get(id).getOn()) consumo += ((FornecedorA) this.fornecedor).precodiapordispositivo(this.devices.get(id), this);
-            }
+        for (String id : this.locations.get(room)){
+            if (this.devices.get(id).getOn()) consumo +=  this.fornecedor.precodiapordispositivo(this.devices.get(id), this);
         }
-
-        else if (this.fornecedor instanceof FornecedorB){
-            for (String id : this.locations.get(room)){
-                if (this.devices.get(id).getOn()) consumo += ((FornecedorB) this.fornecedor).precodiapordispositivo(this.devices.get(id), this);
-            }
-        }
-
-        else if (this.fornecedor instanceof FornecedorC){
-            for (String id : this.locations.get(room)){
-                if (this.devices.get(id).getOn()) consumo += ((FornecedorC) this.fornecedor).precodiapordispositivo(this.devices.get(id), this);
-            }
-        }
-
         return consumo;
     }
 
-    public float consumoCasa(){
-        float consumo = 0;
-        for(String room : this.locations.keySet()){
-            consumo += consumoRoom(room);
-        }
-        return consumo;
+    public double consumoCasa(){
+        return this.devices.values().stream().filter(SmartDevice::getOn).mapToDouble(a -> this.fornecedor.precodiapordispositivo(a,this)).sum();
     }
 
 
