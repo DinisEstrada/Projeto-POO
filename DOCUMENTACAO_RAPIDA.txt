@@ -1,0 +1,33 @@
+
+
+###SmartDevice
+É a super classe que integra SmartBulb,SmartSpeaker e SmartCamera como subclasses.
+Tem como v.i. comuns:
+- Id : dispositivo
+- Estado : ON/OFF (true/false)
+- custo_instalacao
+- consumo-diario (inicializado sempre a zero e só atribuido quando se inicializa as v.i. das subclasses pois cada sub tem formulas de consumo diferentes)
+
+### Casa Inteligente
+É a classe que guarda todos os smartdevices e as divisoes onde se encontram. as variaveis de instancia são
+- dono
+- NIF
+- Hashmap de todos devices. key= id do divice, aponta para o smartdevice
+- Hashmap das divisoes, key: nome da divisao, aponta para lista de ids de smartdevices nessa divisão
+
+### Fornecedor 
+É uma classe abstrata que constroi 3 tipos de fornecedores(A/B e C). Usei classe abstrata pois o metodo precodiapordispositivo tem de ter formulas todas diferentes.
+V.I. sao as variaveis da formula
+-valor_base
+-imposto
+-desconto
+
+clone e tostring tambem são abstratos para funcionarem direito.
+
+### interpreter
+Objetivo é receber um config.txt e construir tudo de forma automática. A estrutura do config pode ser vista vendo os padroes do config.txt.
+V.I. é o ficheiro.
+metodos importantes:
+ - houseConfig: gera um hashmap de todas as casas inteligentes. Key= nome da casa dada no ficheiro |-> CasaInteligente
+ - energyConfig : gera um hashmap de todos os fornecedores e as suas casas. Key= nomedacasa |->  Fornecedor
+ - speakerConfig : gera um hashmap das marcas e dos custos.  Key= marca |-> custo (necessário pq o consumo do speaker depende da marca)
