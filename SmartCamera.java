@@ -62,10 +62,8 @@ public class SmartCamera extends SmartDevice {
         sb.append(super.toString())
                 .append("\nType: SmartBulb")
                 .append("\nResolution: ").append(this.resolution)
-                .append("\nFile Size: ").append(this.file_size);
+                .append("\nFile Size: ").append(this.file_size).append("\n");
 
         return sb.toString();
     }
 }
-
-
