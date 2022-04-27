@@ -12,7 +12,7 @@ import java.util.*;
  */
 
 public class Interpreter {
-    File configfile;
+    private  File configfile;
 
     public Interpreter(){
         this.configfile =  new File("");
@@ -54,7 +54,7 @@ public class Interpreter {
         try{
             Scanner sc = new Scanner(this.configfile);
             while (sc.hasNextLine()) {
-                sb.append(sc.nextLine());
+                sb.append(sc.nextLine()).append("\n");
             }
         }catch (FileNotFoundException e){
             System.out.println("An error occurred. File not located or not open correctly");
@@ -67,10 +67,8 @@ public class Interpreter {
         return new Interpreter(this);
     }
 
-
-
-
-    public HashMap<String, CasaInteligente> creator(){
+    //------------------------------------------------------------------------------------------
+    public HashMap<String, CasaInteligente> housesConfig(){
 
         HashMap<String,CasaInteligente> config = new HashMap<>();
 
@@ -83,15 +81,13 @@ public class Interpreter {
                 parser= file_line.split(";");
                 if(parser[0].equals("houses-config")) config.put(parser[1], createhouse(parser[1]));
             }
+            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred. File not located or not open correctly");
         }
 
         return config;
     }
-
-
-
 
     public CasaInteligente createhouse(String housename){
 
@@ -102,6 +98,8 @@ public class Interpreter {
             String file_line;
             String[] parser;
 
+            casa.setFornecedor(getFornecedor(housename));
+
             while (sc.hasNextLine()){
                 file_line= sc.nextLine();
                 parser= file_line.split(";");
@@ -109,14 +107,12 @@ public class Interpreter {
                 if(parser[0].equals("houses-config") && parser[1].equals(housename)){
                     casa.setOwner(parser[2]);
                     casa.setNif(parser[3]);
-                    String[] parser2 = parser[4].split("-");
-                    for (int i=0;i<parser2.length;i++) casa.addRoom(parser2[i]);
-                }
+                } //adiciona owner e nif
 
-                if(parser[0].equals(housename)){
+                if(parser[0].equals(housename)){ //Adiciona os devices
                     String room = parser[1];
                     String[] parser2 = parser[2].split("-");
-                    SmartDevice smt = new SmartDevice();
+                    SmartDevice smt = null;
 
                     switch (parser2[0]) {
                         case "smtblb" -> {
@@ -155,16 +151,15 @@ public class Interpreter {
                         }
                     }
 
-                    casa.addDevice(smt);
-
-                    if(casa.hasRoom(parser[1])) casa.addDeviceToRoom(room, smt.getID());
-                    else {
-                        List<String> devs_ids = new ArrayList<>();
-                        devs_ids.add(smt.getID());
-                        casa.addRoom(room,devs_ids);
-                    }
-
-                }
+                    if(!casa.existsDevice(smt.getID()))
+                        if(casa.hasRoom(parser[1]))
+                            casa.addDevice(smt,parser[1]);
+                        else {
+                            casa.addRoom(parser[1]);
+                            casa.addDevice(smt,parser[1]);
+                        }
+                    else System.out.println("Device "+smt.getID()+ " already exists");
+                } //adicionaDevices e adicionaLocations
             }
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred. File not located or not open correctly");
@@ -173,6 +168,56 @@ public class Interpreter {
         return casa;
     }
 
+
+    public HashMap<String,Fornecedor> energyConfig(){
+
+        HashMap<String,Fornecedor> lista_fns = new HashMap<>();
+        List<Float> lista = new ArrayList<>();
+
+        try {
+            Scanner sc = new Scanner(this.configfile);
+            String file_line;
+            String[] parser;
+
+            while (sc.hasNextLine()){
+                file_line= sc.nextLine();
+                parser= file_line.split(";");
+
+                if(parser[0].equals("energy-suppliers-config")) {
+                    float valor_base = Float.parseFloat(parser[1]);
+                    float imposto =  Float.parseFloat(parser[2]);
+                    lista.add(valor_base);
+                    lista.add(imposto);
+                }
+
+                if(parser[0].equals("energy-supplier")){
+                    float desconto= Float.parseFloat(parser[3]);
+                    Fornecedor fornecedor = null;
+                    switch (parser[1]){
+                        case "fornecedorA" ->  {
+                            fornecedor = new FornecedorA(parser[2],lista.get(0),lista.get(1),desconto);
+                        }
+                        case "fornecedorB" ->  {
+                            fornecedor = new FornecedorB(parser[2],lista.get(0),lista.get(1),desconto);
+                        }
+                        case "fornecedorC" ->  {
+                            fornecedor = new FornecedorC(parser[2],lista.get(0),lista.get(1),desconto);
+                        }
+                    }
+                    String[] parser2;
+                    parser2 = parser[4].split("-");
+                    for(int i=0; i<parser2.length; i++) lista_fns.put(parser2[i],fornecedor);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred. File not located or not open correctly");
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.out.println(lista);
+        }
+
+        return lista_fns;
+    }
 
     public HashMap<String, Float> speakerConfig(){
         HashMap<String,Float> speaker_config = new HashMap<>();
@@ -193,12 +238,17 @@ public class Interpreter {
         return speaker_config;
     }
 
+
     public Set<String> casas(){
-        return creator().keySet();
+        return housesConfig().keySet();
     }
 
     public CasaInteligente getCasaInteligente(String housename){
-        return creator().get(housename);
+        return housesConfig().get(housename).clone();
     }
 
+    public Fornecedor getFornecedor(String housename){
+        return energyConfig().get(housename);
+    }
 }
+
