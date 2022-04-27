@@ -90,7 +90,7 @@ public class SmartSpeaker extends SmartDevice {
                 .append("\nType: SmartSpeaker")
                 .append("\nVolume: ").append(this.volume)
                 .append("\nChannel: ").append(this.channel)
-                .append("\nBrand: ").append(this.brand);
+                .append("\nBrand: ").append(this.brand).append("\n");
 
         return sb.toString();
     }
@@ -107,45 +107,13 @@ public class SmartSpeaker extends SmartDevice {
 
 
     public float getConsumoBrand(String brand){
-        try{
-            File myFile = new File("brands.txt");
-            Scanner sc = new Scanner(myFile);
-            while (sc.hasNextLine()) {
-                String file_line = sc.nextLine();
-                if(file_line.toUpperCase().contains(brand.toUpperCase())){
-                    Scanner scanner = new Scanner(file_line);
-                    scanner.useDelimiter(";");
-                    int cont=0;
-                    while (scanner.hasNext()) {
-                        cont++;
-                        String line = scanner.next();
-                        if(cont==2) {
-                            return Float.parseFloat(line);
-                        }
-                    }
-                }
-            }
-            sc.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred. File not located or not open correctly");
-        }
-        return 0;
+        Interpreter it = new Interpreter("config.txt");
+        return it.speakerConfig().get(brand);
     }
 
     public boolean isBrandinFile(String brand){
-       try{
-        File myFile = new File("brands.txt");
-        Scanner sc = new Scanner(myFile);
-        while (sc.hasNextLine()) {
-            String file_line = sc.nextLine();
-            if(file_line.toUpperCase().contains(brand.toUpperCase())) return true;
-        }
-           sc.close();
-        } catch (FileNotFoundException e) {
-           System.out.println("An error occurred. File not located");
-           return false;
-       }
-       return false;
+        Interpreter it = new Interpreter("config.txt");
+        return it.speakerConfig().containsKey(brand);
     }
 }
 
