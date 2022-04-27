@@ -1,4 +1,3 @@
-
 public class SmartBulb extends SmartDevice {
     public static final int WARM = 2;
     public static final int NEUTRAL = 1;
@@ -91,10 +90,9 @@ public class SmartBulb extends SmartDevice {
                 .append("\nType: SmartBulb")
                 .append("\nTone: ").append(this.tone)
                 .append("\nDimensão: ").append(this.dimensao)
-                .append("\nValor Fixo: ").append(this.valor_fixo);
+                .append("\nValor Fixo: ").append(this.valor_fixo).append("\n");
 
         return sb.toString();
     }
 
 }
-
