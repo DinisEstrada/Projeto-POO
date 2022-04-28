@@ -9,7 +9,7 @@ import java.util.*;
 public class CasaInteligente {
 
     private String owner;
-    private String nif;
+    private int nif;
 
     private Fornecedor fornecedor;
     private Map<String, SmartDevice> devices; // identificador -> SmartDevice
@@ -21,13 +21,13 @@ public class CasaInteligente {
     public CasaInteligente() {
         // initialise instance variables
         this.owner = "";
-        this.nif = "";
+        this.nif = 0;
         this.fornecedor = null;
         this.devices = new HashMap<>();
         this.locations = new HashMap<>();
     }
 
-    public CasaInteligente(String owner,String nif,Fornecedor fornecedor, Map<String,SmartDevice> ndevices, Map<String, List<String>> nlocations ) {
+    public CasaInteligente(String owner,int nif,Fornecedor fornecedor, Map<String,SmartDevice> ndevices, Map<String, List<String>> nlocations ) {
         // initialise instance variables
         this.owner = owner;
         this.nif = nif;
@@ -39,18 +39,15 @@ public class CasaInteligente {
 
         this.locations = new HashMap<>();
         for (Map.Entry<String,List<String>> e  : nlocations.entrySet()){
-            List<String> ids = new ArrayList<>();
-           for(String id : e.getValue()) {
-               ids.add(id);
-           }
+            List<String> ids = new ArrayList<>(e.getValue());
             this.locations.put(e.getKey(),ids);
         }
     }
 
-    public CasaInteligente(String owner,String nif){
+    public CasaInteligente(String owner,int nif, Fornecedor fornecedor){
         this.owner = owner;
         this.nif = nif;
-        this.fornecedor = null;
+        this.fornecedor = fornecedor.clone();
         this.devices = new HashMap<>();
         this.locations = new HashMap<>();
     }
@@ -66,7 +63,7 @@ public class CasaInteligente {
 
     public String getOwner() {return this.owner;}
 
-    public String getNif() {return this.nif;}
+    public int getNif() {return this.nif;}
 
     public Fornecedor getFornecedor() {return this.fornecedor.clone();}
 
@@ -81,10 +78,7 @@ public class CasaInteligente {
     public Map<String, List<String>> getLocations() {
         Map<String, List<String>> locs = new HashMap<>();
         for (Map.Entry<String,List<String>> e  : this.locations.entrySet()){
-            List<String> ids = new ArrayList<>();
-            for(String id : e.getValue()) {
-                ids.add(id);
-            }
+            List<String> ids = new ArrayList<>(e.getValue());
             locs.put(e.getKey(),ids);
         }
         return locs;
@@ -94,7 +88,7 @@ public class CasaInteligente {
         this.owner = owner;
     }
 
-    public void setNif(String nif) {
+    public void setNif(int nif) {
         this.nif = nif;
     }
 
@@ -112,10 +106,7 @@ public class CasaInteligente {
     public void setLocations(Map<String, List<String>> locs){
         this.locations = new HashMap<>();
         for (Map.Entry<String,List<String>> e  : locs.entrySet()){
-            List<String> ids = new ArrayList<>();
-            for(String id : e.getValue()) {
-                ids.add(id);
-            }
+            List<String> ids = new ArrayList<>(e.getValue());
             this.locations.put(e.getKey(),ids);
         }
     }
@@ -126,22 +117,19 @@ public class CasaInteligente {
         if (!(o instanceof CasaInteligente)) return false;
         CasaInteligente casa = (CasaInteligente) o;
         return ( this.owner.equals(casa.getOwner()) &&
-                this.nif.equals(casa.getNif()) &&
+                this.nif == casa.getNif() &&
                 this.devices.equals(casa.getDevices()) &&
                 this.locations.equals(casa.getLocations()) &&
                 this.fornecedor.equals(casa.getFornecedor()));
     }
 
     public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n### House ###")
-                .append("\nOwner: ").append(this.owner)
-                .append("\nNIF: ").append(this.nif)
-                .append("\nFornecedor: ").append(this.fornecedor)
-                .append("\nDevices ").append(this.devices.toString())
-                .append("\nRooms: ").append(this.locations.toString());
-
-        return sb.toString();
+        return  "\n### House ###" +
+                "\nOwner: " + this.owner +
+                "\nNIF: " + this.nif +
+                "\nFornecedor: " + this.fornecedor +
+                "\nDevices " + this.devices.toString() +
+                "\nRooms: " + this.locations.toString();
     }
     public CasaInteligente clone(){
         return new CasaInteligente(this);
@@ -152,7 +140,11 @@ public class CasaInteligente {
 
     public void addDevice(SmartDevice s, String room) {
         this.devices.put(s.getID(),s.clone());
-        this.locations.get(room).add(s.getID());
+        if(this.locations.containsKey(room)) this.locations.get(room).add(s.getID());
+        else {
+            addRoom(room);
+            this.locations.get(room).add(s.getID());
+        }
     }
 
     public void removeDevice(SmartDevice s) {
@@ -209,7 +201,8 @@ public class CasaInteligente {
     }
 
     public void addRoom(String room, List<String> ids){
-        this.locations.put(room,ids);
+        List<String> ids_cp = new ArrayList<>(ids);
+        this.locations.put(room,ids_cp);
     }
 
     public boolean hasRoom(String room) {return this.locations.containsKey(room);}
@@ -217,16 +210,15 @@ public class CasaInteligente {
     public boolean roomHasDevice (String room, String id) {return this.locations.get(room).contains(id);}
 
 
-    public float consumoRoom(String room){
-        float consumo = 0;
-        for (String id : this.locations.get(room)){
-            if (this.devices.get(id).getOn()) consumo +=  this.fornecedor.precodiapordispositivo(this.devices.get(id), this);
-        }
-        return consumo;
+    public double consumoRoom(String room){
+        return this.locations.get(room).stream()
+                .mapToDouble(id-> this.fornecedor.formulaPreco(this.devices.get(id), this))
+                .sum();
+
     }
 
     public double consumoCasa(){
-        return this.devices.values().stream().filter(SmartDevice::getOn).mapToDouble(a -> this.fornecedor.precodiapordispositivo(a,this)).sum();
+        return this.devices.values().stream().filter(SmartDevice::getOn).mapToDouble(a -> this.fornecedor.formulaPreco(a,this)).sum();
     }
 
 
