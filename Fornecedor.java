@@ -71,5 +71,5 @@ abstract class Fornecedor {
         else return "Fornecedor";
     }
 
-    public abstract float precodiapordispositivo(SmartDevice smt, CasaInteligente house);
+    public abstract float formulaPreco(SmartDevice smt, CasaInteligente house);
 }
