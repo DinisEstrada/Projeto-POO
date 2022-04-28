@@ -81,14 +81,11 @@ public class SmartDevice {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n### SmartDevice ###")
-                .append("\nID: ").append(this.id)
-                .append("\nLigado: ").append(this.on)
-                .append("\nCusto de Instalação: ").append(this.custo_inst)
-                .append("\nConsumo Diário: ").append(this.consumo_diario);
-
-        return sb.toString();
+        return  "\n### SmartDevice ###" +
+                "\nID: " + this.id +
+                "\nLigado: " + this.on +
+                "\nCusto de Instalação: " + this.custo_inst +
+                "\nConsumo Diário: " + this.consumo_diario;
     }
 
     public void turnOn() {
@@ -100,5 +97,3 @@ public class SmartDevice {
     }
 
 }
-
-
