@@ -1,10 +1,11 @@
+
 public class SmartBulb extends SmartDevice {
     public static final int WARM = 2;
     public static final int NEUTRAL = 1;
     public static final int COLD = 0;
     
     private int tone;
-    private int dimensao;
+    private float dimensao;
     private float valor_fixo;
 
 
@@ -22,12 +23,11 @@ public class SmartBulb extends SmartDevice {
         this.valor_fixo = 0;
     }
 
-    public SmartBulb(String id, boolean state, float custo, int tone, int dimensao, float valor_fixo) {
+    public SmartBulb(String id, boolean state, float custo, int tone, float dimensao, float valor_fixo) {
         super(id,state,custo);
 
         if (tone>WARM) this.tone = WARM;
-        else if (tone<COLD) this.tone = COLD;
-        else this.tone = tone;
+        else this.tone = Math.max(tone, COLD);
 
         this.dimensao = dimensao;
         this.valor_fixo= valor_fixo;
@@ -40,8 +40,7 @@ public class SmartBulb extends SmartDevice {
 
         int t=smt.getTone();
         if (t>WARM) this.tone = WARM;
-        else if (t<COLD) this.tone = COLD;
-        else this.tone = t;
+        else this.tone = Math.max(t, COLD);
 
         this.dimensao = smt.getDimensao();
         this.valor_fixo= smt.getValorFixo();
@@ -53,7 +52,7 @@ public class SmartBulb extends SmartDevice {
         return this.tone;
     }
 
-    public int getDimensao(){
+    public float getDimensao(){
         return this.dimensao;
     }
 
@@ -61,11 +60,10 @@ public class SmartBulb extends SmartDevice {
 
     public void setTone(int t) {
         if (t>WARM) this.tone = WARM;
-        else if (t<COLD) this.tone = COLD;
-        else this.tone = t;
+        else this.tone = Math.max(t, COLD);
     }
 
-    public void setDimensão(int dimensao){
+    public void setDimensao(float dimensao){
         this.dimensao= dimensao;
     }
 
@@ -85,14 +83,12 @@ public class SmartBulb extends SmartDevice {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString())
-                .append("\nType: SmartBulb")
-                .append("\nTone: ").append(this.tone)
-                .append("\nDimensão: ").append(this.dimensao)
-                .append("\nValor Fixo: ").append(this.valor_fixo).append("\n");
-
-        return sb.toString();
+        return super.toString() +
+                "\nType: SmartBulb" +
+                "\nTone: " + this.tone +
+                "\nDimensão: " + this.dimensao +
+                "\nValor Fixo: " + this.valor_fixo + "\n";
     }
 
 }
+

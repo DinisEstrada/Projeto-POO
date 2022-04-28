@@ -1,29 +1,33 @@
-
 public class SmartCamera extends SmartDevice {
 
 
-    private int resolution;
-    private int file_size;
+    private Resolution resolution;
+    private float file_size;
+    private float compression;
 
 
     public SmartCamera() {
         super();
-        this.resolution = 1080;
+        this.resolution = new Resolution();
         this.file_size = 0;
+        this.compression = 0;
     }
 
     public SmartCamera(String id) {
         super(id);
-        this.resolution = 1080;
+        this.resolution = new Resolution();
         this.file_size = 0;
+        this.compression = 0;
     }
 
-    public SmartCamera(String id, boolean state, float custo, int resolution, int file_size) {
+    public SmartCamera(String id, boolean state, float custo, Resolution resolution, float file_size, float compression) {
         super(id,state,custo);
         this.resolution = resolution;
         this.file_size = file_size;
+        this.compression = compression;
 
-        super.setConsumo((float)this.resolution*this.file_size);
+        float consumo = (this.resolution.getRes()*this.file_size) * this.compression;
+        super.setConsumo(consumo);
     }
 
     public SmartCamera(SmartCamera smt){
@@ -31,18 +35,26 @@ public class SmartCamera extends SmartDevice {
 
         this.resolution = smt.getResolution();
         this.file_size = smt.getFileSize();
-        super.setConsumo((float)smt.getResolution()*smt.getFileSize());
+        this.compression = smt.getCompression();
+
+        float consumo = (smt.getResolution().getRes()*smt.getFileSize()) * smt.getCompression();
+
+        super.setConsumo(consumo);
     }
 
-    public int getResolution() {
+    public Resolution getResolution() {
         return this.resolution;
     }
 
-    public int getFileSize() { return this.file_size; }
+    public float getFileSize() { return this.file_size; }
 
-    public void setResolution(int res) { this.resolution = res; }
+    public float getCompression() {return this.compression;}
 
-    public void setFileSize(int file_size) { this.file_size = file_size; }
+    public void setResolution(Resolution res) { this.resolution = res; }
+
+    public void setFileSize(float file_size) { this.file_size = file_size; }
+
+    public void setCompression(float compression) {this.compression = compression;}
 
     public SmartCamera clone(){
         return new SmartCamera(this);
@@ -58,12 +70,11 @@ public class SmartCamera extends SmartDevice {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(super.toString())
-                .append("\nType: SmartBulb")
-                .append("\nResolution: ").append(this.resolution)
-                .append("\nFile Size: ").append(this.file_size).append("\n");
-
-        return sb.toString();
+        return super.toString() +
+                "\nType: SmartBulb" +
+                this.resolution +
+                "\nFile Size: " + this.file_size + "\n";
     }
 }
+
+

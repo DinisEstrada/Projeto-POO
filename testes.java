@@ -129,25 +129,14 @@ public class testes {
         System.out.println(rooms);
         System.out.println(rooms2);
 */
-        Interpreter it = new Interpreter("config.txt");
+        Parser it = new Parser("logs.csv");
 
         HashMap<String,CasaInteligente> housesConfig = it.housesConfig();
         HashMap<String,Fornecedor> energyConfig = it.energyConfig();
-        HashMap<String,Float> speakerConfig = it.speakerConfig();
 
-        //System.out.println(housesConfig.get("casa1").consumoCasa());
-        //System.out.println(housesConfig.get("casa1").getFornecedor());
-
-        Fornecedor fn = housesConfig.get("casa1").getFornecedor();
         CasaInteligente casa = housesConfig.get("casa1");
-        float consumo = fn.precodiapordispositivo(housesConfig.get("casa1").getDevice("smtblb-1001"),casa);
-        System.out.println(consumo);
 
-
-        //System.out.println(energyConfig);
-
-
-
+        System.out.println(housesConfig.get("casa0"));
 
     }
 }
