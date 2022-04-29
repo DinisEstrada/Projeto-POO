@@ -129,14 +129,14 @@ public class testes {
         System.out.println(rooms);
         System.out.println(rooms2);
 */
-        Parser it = new Parser("logs.csv");
+        Parser estado = new Parser("logs.csv");
 
-        HashMap<String,CasaInteligente> housesConfig = it.housesConfig();
-        HashMap<String,Fornecedor> energyConfig = it.energyConfig();
+        HashMap<String,CasaInteligente> housesConfig = estado.housesConfig();
+        HashMap<String,Fornecedor> energyConfig = estado.energyConfig();
 
-        CasaInteligente casa = housesConfig.get("casa1");
+        CasaInteligente casa = housesConfig.get("casa199");
 
-        System.out.println(housesConfig.get("casa0"));
+        System.out.println(casa);
 
     }
 }
