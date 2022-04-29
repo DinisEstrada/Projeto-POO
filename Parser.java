@@ -129,7 +129,10 @@ public class Parser {
                     float valor_fixo = 1.4f;
                     float dimensao = Float.parseFloat(campos[1]);
 
-                    SmartDevice sd = new SmartBulb(nome.toString(), false, 1.0f, tone, dimensao, valor_fixo);
+                    boolean state = false;
+                    if (rand_num%3 == 1) state=true;
+
+                    SmartDevice sd = new SmartBulb(nome.toString(), state, 1.0f, tone, dimensao, valor_fixo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -151,7 +154,10 @@ public class Parser {
                     float file_size = Float.parseFloat(campos[4]);
                     float compresao = Float.parseFloat(campos[5]);
 
-                    SmartDevice sd = new SmartCamera(nome, false, 2.0f,res,file_size,compresao);
+                    boolean state = false;
+                    if (rand_num%3 == 1) state=true;
+
+                    SmartDevice sd = new SmartCamera(nome, state, 2.0f,res,file_size,compresao);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -169,7 +175,10 @@ public class Parser {
                     String channel = campos[1];
                     String brand = campos[2];
 
-                    SmartDevice sd = new SmartSpeaker(nome, false, 3.0f, volume, channel, brand, 1.5f);
+                    boolean state = false;
+                    if (rand_num%3 == 1) state=true;
+
+                    SmartDevice sd = new SmartSpeaker(nome, state, 3.0f, volume, channel, brand, 1.5f);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
