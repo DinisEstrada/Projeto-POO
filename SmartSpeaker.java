@@ -1,3 +1,8 @@
+import ErrorHandling.ResolutionException;
+import ErrorHandling.SmartCameraException;
+import ErrorHandling.SmartDeviceException;
+import ErrorHandling.SmartSpeakerException;
+
 public class SmartSpeaker extends SmartDevice {
     public static final int MAX = 100;
     private int volume;
@@ -22,24 +27,24 @@ public class SmartSpeaker extends SmartDevice {
         this.brand_comsuption = 0;
     }
 
-    public SmartSpeaker(String id, boolean state, float cost, int vol, String channel, String brand,float bd_comp) {
+    public SmartSpeaker(String id, boolean state, float cost, int vol, String channel, String brand,float bd_comp) throws SmartDeviceException, SmartSpeakerException {
         super(id,state,cost);
 
-        this.volume = Math.min(vol, MAX);
+        if(brand.equals("") || bd_comp<0) throw  new  SmartSpeakerException("Valores Negativos");
 
+        this.volume = Math.min(vol, MAX);
         this.channel = channel;
         this.brand = brand;
         this.brand_comsuption = bd_comp;
-
         super.setConsumo(this.brand_comsuption * (float) this.volume);
     }
 
-    public SmartSpeaker(SmartSpeaker smt){
+    public SmartSpeaker(SmartSpeaker smt) throws SmartDeviceException,SmartSpeakerException {
         super(smt.getID(), smt.getOn(),smt.getCusto());
+        if(smt.getBrand().equals("") || smt.getChannel().equals("") || smt.getBrand_comsuption()<0) throw  new  SmartSpeakerException("Valores Negativos");
+
         super.setConsumo(smt.getConsumo());
-
         this.volume = Math.min(smt.getVolume(), MAX);
-
         this.channel = smt.getChannel();
         this.brand = smt.getBrand();
         this.brand_comsuption = smt.getBrand_comsuption();
@@ -56,18 +61,26 @@ public class SmartSpeaker extends SmartDevice {
 
     public float getBrand_comsuption() {return brand_comsuption;}
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+    public void setVolume(int volume)  {
+
+        this.volume = Math.min(volume,MAX);
     }
 
     public void setChannel(String c) {this.channel=c;}
 
     public void setBrand(String c) {this.brand=c;}
 
-    public void setBrand_comsuption(float brand_comsuption) {this.brand_comsuption = brand_comsuption;}
+    public void setBrand_comsuption(float brand_comsuption) throws SmartSpeakerException {
+        if(brand_comsuption<0) throw new SmartSpeakerException("Atribuição de Consumo da Marca Negativo");
+        this.brand_comsuption = brand_comsuption;
+    }
 
     public SmartSpeaker clone(){
-        return new SmartSpeaker(this);
+        try {
+            return new SmartSpeaker(this);
+        } catch (SmartDeviceException | SmartSpeakerException e) {
+            throw new RuntimeException("Clone Failed"+e);
+        }
     }
 
     public boolean equals(Object o){

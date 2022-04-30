@@ -1,3 +1,5 @@
+import ErrorHandling.SmartBulbException;
+import ErrorHandling.SmartDeviceException;
 
 public class SmartBulb extends SmartDevice {
     public static final int WARM = 2;
@@ -23,8 +25,10 @@ public class SmartBulb extends SmartDevice {
         this.valor_fixo = 0;
     }
 
-    public SmartBulb(String id, boolean state, float custo, int tone, float dimensao, float valor_fixo) {
+    public SmartBulb(String id, boolean state, float custo, int tone, float dimensao, float valor_fixo) throws SmartDeviceException,SmartBulbException{
         super(id,state,custo);
+
+        if(dimensao<0 || valor_fixo<0) throw new SmartBulbException( id + " Valores Negativos");
 
         if (tone>WARM) this.tone = WARM;
         else this.tone = Math.max(tone, COLD);
@@ -35,8 +39,11 @@ public class SmartBulb extends SmartDevice {
         super.setConsumo(this.valor_fixo+((float)this.tone*0.5f));
     }
 
-    public SmartBulb(SmartBulb smt){
+    public SmartBulb(SmartBulb smt) throws SmartDeviceException,SmartBulbException{
+
         super(smt.getID(), smt.getOn(),smt.getCusto());
+
+        if(smt.getValorFixo()<0 || smt.getDimensao()<0) throw new SmartBulbException(smt.getID() + " Valores Negativos");
 
         int t=smt.getTone();
         if (t>WARM) this.tone = WARM;
@@ -63,14 +70,22 @@ public class SmartBulb extends SmartDevice {
         else this.tone = Math.max(t, COLD);
     }
 
-    public void setDimensao(float dimensao){
+    public void setDimensao(float dimensao) throws SmartBulbException{
+        if (dimensao<0 ) throw new SmartBulbException("Atribuição de Dimensão Negativa");
         this.dimensao= dimensao;
     }
 
-    public void setValorFixo(int valor_fixo) {this.valor_fixo=valor_fixo;}
+    public void setValorFixo(int valor_fixo) throws SmartBulbException{
+        if (valor_fixo<0 ) throw new SmartBulbException("Atribuição de Valor Fixo Negativo");
+        this.valor_fixo=valor_fixo;
+    }
 
     public SmartBulb clone(){
-        return new SmartBulb(this);
+        try {
+            return new SmartBulb(this);
+        } catch (SmartDeviceException | SmartBulbException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean equals(Object o){

@@ -1,19 +1,23 @@
-public class FornecedorB extends Fornecedor{
+import ErrorHandling.CasaInteligenteException;
+import ErrorHandling.FornecedorException;
+import ErrorHandling.SmartDeviceException;
 
-    FornecedorB(){
+public class FornecedorB extends Fornecedor {
+
+    FornecedorB() {
         super();
     }
 
-    FornecedorB(String name, float valor_base, float imposto, float desconto){
+    FornecedorB(String name, float valor_base, float imposto, float desconto) throws FornecedorException {
         super(name, valor_base, imposto, desconto);
     }
 
-    FornecedorB(FornecedorB f){
-        super(f.getName(),f.getValor_base(),f.getImposto(),f.getDesconto());
+    FornecedorB(FornecedorB f) throws FornecedorException {
+        super(f.getName(), f.getValor_base(), f.getImposto(), f.getDesconto());
     }
 
     public String toString() {
-        return  "\n### FornecedorB ###" +
+        return "\n### FornecedorB ###" +
                 "\nFornecedor: " + super.getName() +
                 "\nValorBase: " + super.getValor_base() +
                 "\nImposto: " + super.getImposto() +
@@ -21,10 +25,26 @@ public class FornecedorB extends Fornecedor{
                 "\n";
     }
 
-    public FornecedorB clone(){return new FornecedorB(this); }
+    public FornecedorB clone() {
+        try {
+            return new FornecedorB(this);
+        } catch (FornecedorException e) {
+            throw new RuntimeException("Clone FornecedorB Failed");
+        }
+    }
 
-    public float formulaPreco(SmartDevice smt, CasaInteligente casa){
-        if(casa.numberDevices()<10)  return (super.getValor_base()*smt.getConsumo()* (1+super.getImposto()/100))*(1 - super.getDesconto()/100);
-        else return (super.getValor_base()*smt.getConsumo()* (1+super.getImposto()/100))*(1 - (2*super.getDesconto())/100);
+    public float formulaPreco(SmartDevice smt, CasaInteligente casa) throws CasaInteligenteException, SmartDeviceException, FornecedorException {
+        if (smt == null || smt.getConsumo() < 0)
+            throw new SmartDeviceException("SmartDevice não existe/Valores Inválidos");
+        else if (super.getDesconto() < 0 || super.getImposto() < 0 || super.getValor_base() < 0)
+            throw new FornecedorException("Valores Negativos");
+        else if (casa == null || casa.existsDevice(smt.getID()))
+            throw new CasaInteligenteException("SmartDevice não existe na casa");
+        else {
+            if (casa.numberDevices() < 10)
+                return (super.getValor_base() * smt.getConsumo() * (1 + super.getImposto() / 100)) * (1 - super.getDesconto() / 100);
+            else
+                return (super.getValor_base() * smt.getConsumo() * (1 + super.getImposto() / 100)) * (1 - (2 * super.getDesconto()) / 100);
+        }
     }
 }

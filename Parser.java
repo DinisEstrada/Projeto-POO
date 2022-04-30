@@ -1,3 +1,5 @@
+import ErrorHandling.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -68,7 +70,7 @@ public class Parser {
 
     //------------------------------------------------------------------------------------------
 
-    public HashMap<String,CasaInteligente> housesConfig(){
+    public HashMap<String,CasaInteligente> housesConfig() throws CasaInteligenteException, SmartDeviceException, FornecedorException, SmartBulbException, ResolutionException, SmartCameraException, SmartSpeakerException, FileNotFoundException {
         List<String> linhas = lerFicheiro();
         String[] linhaPartida;
 
@@ -85,16 +87,13 @@ public class Parser {
             switch(linhaPartida[0]){
                 case "Fornecedor" -> {
                     if (!fornecedores.containsKey(linhaPartida[1])) {
-
                         Fornecedor fn = null;
                         String nome_fornecedor = linhaPartida[1];
                         int num_random = num.nextInt(3);
 
                         switch (num_random){
                             case(0) -> fn = new FornecedorA(nome_fornecedor,1,10,5);
-
                             case(1) -> fn = new FornecedorB(nome_fornecedor,2,15,10);
-
                             case(2) -> fn = new FornecedorC(nome_fornecedor,3,20,15);
                         }
                         fornecedores.put(nome_fornecedor,fn);
@@ -108,13 +107,15 @@ public class Parser {
                     lista_casas.put(key, casaMaisRecente);
                 }
                 case "Divisao" -> {
-                    if (casaMaisRecente == null) System.out.println("Divisão - Linha inválida.");
+                    if (casaMaisRecente == null) throw new CasaInteligenteException("Casa Não Identificada");
+
                     divisao = linhaPartida[1];
                     if (!casaMaisRecente.hasRoom(divisao))
                         casaMaisRecente.addRoom(divisao);
                 }
                 case "SmartBulb" -> {
-                    if (divisao == null) System.out.println("SmartBulb - Linha inválida.");
+                    if (divisao == null) throw new CasaInteligenteException("Divisão Não Identificada");
+
                     String[] campos = linhaPartida[1].split(",");
                     StringBuilder nome = new StringBuilder();
                     int rand_num = num.nextInt(999999);
@@ -122,22 +123,22 @@ public class Parser {
 
                     int tone = -1;
                     switch (campos[0]){
-                        case "Warm" -> tone=2;
-                        case "Neutral" -> tone=1;
-                        case "Cold" -> tone=0;
+                        case "Warm" -> tone = 2;
+                        case "Neutral" -> tone = 1;
+                        case "Cold" -> tone = 0;
                     }
                     float valor_fixo = 1.4f;
                     float dimensao = Float.parseFloat(campos[1]);
 
                     boolean state = false;
-                    if (rand_num%3 == 1) state=true;
+                    if (rand_num % 3 == 1) state = true;
 
                     SmartDevice sd = new SmartBulb(nome.toString(), state, 1.0f, tone, dimensao, valor_fixo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
                 case "SmartCamera" -> {
-                    if (divisao == null) System.out.println("SmartCamera - Linha inválida.");
+                    if (divisao == null) throw new CasaInteligenteException("Divisão Não Identificada");
 
                     String[] campos = linhaPartida[1].split("[(,x)]");
 
@@ -155,14 +156,14 @@ public class Parser {
                     float compresao = Float.parseFloat(campos[5]);
 
                     boolean state = false;
-                    if (rand_num%3 == 1) state=true;
+                    if (rand_num % 3 == 1) state=true;
 
                     SmartDevice sd = new SmartCamera(nome, state, 2.0f,res,file_size,compresao);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
                 case "SmartSpeaker" -> {
-                    if (divisao == null) System.out.println("SmartSpeaker - Linha inválida.");
+                    if (divisao == null) throw new CasaInteligenteException("Divisão Não Identificada");
 
                     String[] campos = linhaPartida[1].split(",");
 
@@ -183,14 +184,14 @@ public class Parser {
                     casaMaisRecente.addDevice(sd, divisao);
                 }
 
-                default -> System.out.println("Linha Inválida/Vazia");
+                default -> System.out.println(linhaPartida[0]+"Linha Inválida/Vazia");
             }
         }
         //lista_casas.remove("casa0");
         return lista_casas;
     }
 
-    public CasaInteligente createCasa(String input, HashMap<String,Fornecedor> forns){
+    public CasaInteligente createCasa(String input, HashMap<String,Fornecedor> forns) throws CasaInteligenteException {
         String[] campos = input.split(",");
 
         String nome = campos[0];
@@ -200,7 +201,7 @@ public class Parser {
         return new CasaInteligente(nome, nif,fornecedor);
     }
 
-    public HashMap<String,Fornecedor> energyConfig() {
+    public HashMap<String,Fornecedor> energyConfig() throws FileNotFoundException, FornecedorException {
 
         HashMap<String, Fornecedor> lista_fns = new HashMap<>();
         List<String> file_lines = lerFicheiro();
@@ -211,7 +212,7 @@ public class Parser {
 
             linhaPartida = linha.split(":", 2);
 
-            if(linhaPartida[0].equals("Fornecedor")){
+            if(linhaPartida[0].equals("Fornecedores.Fornecedor")){
                 if (!lista_fns.containsKey(linhaPartida[1])) {
                     Random num= new Random();
                     int num_random = num.nextInt(3);
@@ -227,7 +228,7 @@ public class Parser {
         return lista_fns;
     }
 
-    public List<String> lerFicheiro() {
+    public List<String> lerFicheiro() throws FileNotFoundException {
         List<String> lines = new ArrayList<>();
         try {
             Scanner sc = new Scanner(this.configfile);
@@ -237,22 +238,22 @@ public class Parser {
                 lines.add(file_line);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred. File not located or not open correctly");
+           throw  new FileNotFoundException("An error occurred. File not located or not open correctly");
         }
         return lines;
     }
 
-    public Set<String> casas(){return housesConfig().keySet();}
+    public Set<String> casas() throws CasaInteligenteException, ResolutionException, SmartBulbException, SmartSpeakerException, SmartCameraException, SmartDeviceException, FornecedorException, FileNotFoundException {return housesConfig().keySet();}
 
-    public CasaInteligente getCasaInteligente(String housename){
+    public CasaInteligente getCasaInteligente(String housename) throws CasaInteligenteException, ResolutionException, SmartBulbException, SmartSpeakerException, SmartCameraException, SmartDeviceException, FornecedorException, FileNotFoundException {
         return housesConfig().get(housename).clone();
     }
 
-    public Fornecedor getFornecedor(String housename){
+    public Fornecedor getFornecedor(String housename) throws FileNotFoundException, FornecedorException {
         return energyConfig().get(housename);
     }
 
-    public int getNumberCasas(){
+    public int getNumberCasas() throws CasaInteligenteException, ResolutionException, SmartBulbException, SmartSpeakerException, SmartCameraException, SmartDeviceException, FornecedorException, FileNotFoundException {
         return housesConfig().keySet().size();
     }
 

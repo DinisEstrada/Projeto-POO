@@ -1,3 +1,7 @@
+import ErrorHandling.CasaInteligenteException;
+import ErrorHandling.FornecedorException;
+import ErrorHandling.SmartDeviceException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -6,7 +10,7 @@ import java.util.*;
  * @author josefonte
  * @version 0.1
  */
-public class CasaInteligente {
+public class CasaInteligente implements Serializable, Comparable {
 
     private String owner;
     private int nif;
@@ -27,8 +31,9 @@ public class CasaInteligente {
         this.locations = new HashMap<>();
     }
 
-    public CasaInteligente(String owner,int nif,Fornecedor fornecedor, Map<String,SmartDevice> ndevices, Map<String, List<String>> nlocations ) {
-        // initialise instance variables
+    public CasaInteligente(String owner, int nif, Fornecedor fornecedor, Map<String,SmartDevice> ndevices, Map<String, List<String>> nlocations ) throws CasaInteligenteException {
+        if(owner.equals("") || nif<0) throw new CasaInteligenteException("Informação do Dono Errada");
+
         this.owner = owner;
         this.nif = nif;
         this.fornecedor = fornecedor.clone();
@@ -44,7 +49,9 @@ public class CasaInteligente {
         }
     }
 
-    public CasaInteligente(String owner,int nif, Fornecedor fornecedor){
+    public CasaInteligente(String owner,int nif, Fornecedor fornecedor) throws CasaInteligenteException {
+        if(owner.equals("") || nif<0) throw new CasaInteligenteException("Informação do Dono Errada");
+
         this.owner = owner;
         this.nif = nif;
         this.fornecedor = fornecedor.clone();
@@ -52,7 +59,9 @@ public class CasaInteligente {
         this.locations = new HashMap<>();
     }
 
-    public CasaInteligente(CasaInteligente casa){
+    public CasaInteligente(CasaInteligente casa) throws CasaInteligenteException {
+        if(casa.getOwner().equals("") || casa.getNif()<0) throw new CasaInteligenteException("Informação do Dono Errada");
+
         this.owner = casa.getOwner();
         this.nif = casa.getNif();
         this.fornecedor = casa.getFornecedor();
@@ -88,11 +97,12 @@ public class CasaInteligente {
         this.owner = owner;
     }
 
-    public void setNif(int nif) {
+    public void setNif(int nif) throws CasaInteligenteException {
+        if (nif<0) throw new CasaInteligenteException("Nif Negativo");
         this.nif = nif;
     }
 
-    public void setFornecedor(Fornecedor fornecedor) {
+    public void setFornecedor(Fornecedor fornecedor)  {
         this.fornecedor = fornecedor;
     }
 
@@ -118,9 +128,9 @@ public class CasaInteligente {
         CasaInteligente casa = (CasaInteligente) o;
         return ( this.owner.equals(casa.getOwner()) &&
                 this.nif == casa.getNif() &&
+                this.fornecedor.equals(casa.getFornecedor()) &&
                 this.devices.equals(casa.getDevices()) &&
-                this.locations.equals(casa.getLocations()) &&
-                this.fornecedor.equals(casa.getFornecedor()));
+                this.locations.equals(casa.getLocations()));
     }
 
     public String toString(){
@@ -132,8 +142,37 @@ public class CasaInteligente {
                 "\nRooms: " + this.locations.toString();
     }
     public CasaInteligente clone(){
-        return new CasaInteligente(this);
+        try {
+            return new CasaInteligente(this);
+        } catch (CasaInteligenteException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    public void guardaCasa(String nomeFicheiro) throws FileNotFoundException, IOException{
+        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(this);
+        oos.flush();
+        oos.close();
+        fos.close();
+    }
+
+    public CasaInteligente carregaCasa(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream fos = new FileInputStream(nomeFicheiro);
+        ObjectInputStream oos = new ObjectInputStream(fos);
+        CasaInteligente c = (CasaInteligente) oos.readObject();
+        oos.close();
+        fos.close();
+        return c;
+    }
+
+
+    public int compareTo(Object o) {
+        CasaInteligente casa = (CasaInteligente) o;
+        return (int) (this.consumoCasa()-casa.consumoCasa());
+    }
+
 
     //---------------------------------------------------------------------------------
 
@@ -162,35 +201,45 @@ public class CasaInteligente {
 
     public boolean existsDevice(String id) {return this.devices.containsKey(id);}
 
-    public SmartDevice getDevice(String id) {return this.devices.get(id).clone();}
+    public SmartDevice getDevice(String id) throws CasaInteligenteException{
+        if(this.devices.get(id) == null) throw new CasaInteligenteException("Não Existe");
+        return this.devices.get(id).clone();
+    }
 
 
 
-    public void setRoomOn(String room, boolean b) {
+    public void setRoomOn(String room, boolean b) throws CasaInteligenteException {
+        if(this.locations.get(room) == null) throw new CasaInteligenteException("Divisão" + room + "não existe");
         for (String id : this.locations.get(room)){
             this.devices.get(id).setOn(b);
         }
     }
 
-    public void turnRoomOn(String room){
+    public void turnRoomOn(String room) throws CasaInteligenteException {
+        if(this.locations.get(room) == null) throw new CasaInteligenteException("Divisão" + room + "não existe");
         setRoomOn(room,true);
     }
 
-    public void turnRoomOff(String room){
+    public void turnRoomOff(String room) throws CasaInteligenteException {
+        if(this.locations.get(room) == null) throw new CasaInteligenteException("Divisão" + room + "não existe");
         setRoomOn(room,false);
     }
 
-    public void setAllOn(boolean b) {
-        for(String room : this.locations.keySet())
-            for (String id : this.locations.get(room))
+    public void setAllOn(boolean b) throws CasaInteligenteException {
+        for(String room : this.locations.keySet()){
+            if(room == null) throw new CasaInteligenteException("Divisão não existe");
+            for (String id : this.locations.get(room)){
+                if(this.devices.get(id) == null) throw new CasaInteligenteException("Device "+ id + "não existe");
                 this.devices.get(id).setOn(b);
+            }
+        }
     }
 
-    public void turnAllOn(){
+    public void turnAllOn() throws CasaInteligenteException {
         setAllOn(true);
     }
 
-    public void turnAllOff(){
+    public void turnAllOff() throws CasaInteligenteException {
         setAllOn(false);
     }
 
@@ -200,25 +249,44 @@ public class CasaInteligente {
         this.locations.put(s,ids);
     }
 
-    public void addRoom(String room, List<String> ids){
+    public void addRoom(String room, List<String> ids) throws CasaInteligenteException {
+
+        if(ids==null) throw new CasaInteligenteException("Lista de Devices null");
+
         List<String> ids_cp = new ArrayList<>(ids);
         this.locations.put(room,ids_cp);
     }
 
-    public boolean hasRoom(String room) {return this.locations.containsKey(room);}
+    public boolean hasRoom(String room) {
+        return this.locations.containsKey(room);
+    }
 
     public boolean roomHasDevice (String room, String id) {return this.locations.get(room).contains(id);}
 
 
-    public double consumoRoom(String room){
+    public double consumoRoom(String room) throws CasaInteligenteException{
+        if(this.locations.get(room)==null) throw new CasaInteligenteException("Divisão "+room+"não existe");
+
         return this.locations.get(room).stream()
-                .mapToDouble(id-> this.fornecedor.formulaPreco(this.devices.get(id), this))
+                .mapToDouble(id-> {
+                    try {
+                        return this.fornecedor.formulaPreco(this.devices.get(id), this);
+                    } catch (SmartDeviceException | CasaInteligenteException | FornecedorException e) {
+                        throw new RuntimeException("Impossível Computar o Consumo"+e);
+                    }
+                })
                 .sum();
 
     }
 
     public double consumoCasa(){
-        return this.devices.values().stream().filter(SmartDevice::getOn).mapToDouble(a -> this.fornecedor.formulaPreco(a,this)).sum();
+        return this.devices.values().stream().filter(SmartDevice::getOn).mapToDouble(a -> {
+            try {
+                return this.fornecedor.formulaPreco(a,this);
+            } catch (SmartDeviceException | CasaInteligenteException | FornecedorException e) {
+                throw new RuntimeException("Impossível Computar o Consumo da Casa"+e);
+            }
+        }).sum();
     }
 
 
@@ -239,10 +307,11 @@ public class CasaInteligente {
         return devs;
     }
 
-    public List<Boolean> getRoomState(String room){
+    public List<Boolean> getRoomState(String room) throws CasaInteligenteException {
+
+        if(room == null) throw new CasaInteligenteException("Divisão não existe");
 
         List<Boolean> lista = new ArrayList<>();
-
         for (String id : this.locations.get(room)) {
             lista.add(this.devices.get(id).getOn());
         }
