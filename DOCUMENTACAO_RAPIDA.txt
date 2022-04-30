@@ -50,6 +50,7 @@ Tarefas já feitas:
 
 
 Tarefas por fazer:
+-> Criar testes /*Extra para automatizar processo de testagem*/ 
 -> MENU e SUBMENUS (DINIS)
 -> Criar uma classe estado com todas as casas e fornecedores e as suas configurações (Zé)
 -> tirar faturas por cada casa (prov criar classe fatura) (Zé)
