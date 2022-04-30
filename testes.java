@@ -11,20 +11,23 @@ public class testes {
         try {
             Parser hq = new Parser("logs.csv");
 
-            CasaInteligente casa1og= new CasaInteligente(hq.housesConfig().get("casa0"));
-            casa1og.guardaCasa("casa1");
+            CasaInteligente casa1 = new CasaInteligente(hq.housesConfig().get("casa1"));
+            CasaInteligente casa1_cp = casa1.clone();
 
-            //System.out.println(casa12);
+            FornecedorA f1 = new FornecedorA("Galp",1,10,15);
+            FornecedorA f2 = new FornecedorA("EDP",2,15,15);
+            FornecedorA f3 = new FornecedorA("Iberdrola",3,20,15);
 
-            CasaInteligente casa1_file = new CasaInteligente();
-            CasaInteligente casa1= new CasaInteligente(casa1_file.carregaCasa("casa1"));
+            Set<Fornecedor> fornecedors = new HashSet<>();
+            fornecedors.add(f1);
+            fornecedors.add(f2);
+            fornecedors.add(f3);
 
-            //System.out.println(casa1og);
-            //System.out.println(casa1);
+            fornecedors.stream().filter(f -> f.getName().equals("Galp")).forEach(System.out::println);
 
-            System.out.println(casa1og.getDevices().keySet());
-            System.out.println(casa1.getDevices().keySet());
-            //System.out.println(casa1og.getDevices().equals(casa1.getDevices()));
+            System.out.println();
+
+
 
         } catch (Exception e) {
             System.out.println(e);

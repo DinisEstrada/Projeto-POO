@@ -103,7 +103,7 @@ public class CasaInteligente implements Serializable, Comparable {
     }
 
     public void setFornecedor(Fornecedor fornecedor)  {
-        this.fornecedor = fornecedor;
+        this.fornecedor = fornecedor.clone();
     }
 
     public void setDevices(Map<String, SmartDevice> devs){

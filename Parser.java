@@ -94,7 +94,7 @@ public class Parser {
                         switch (num_random){
                             case(0) -> fn = new FornecedorA(nome_fornecedor,1,10,5);
                             case(1) -> fn = new FornecedorB(nome_fornecedor,2,15,10);
-                            case(2) -> fn = new FornecedorC(nome_fornecedor,3,20,15);
+                            case(2) -> fn = new FornecedorC(nome_fornecedor,3,10,15);
                         }
                         fornecedores.put(nome_fornecedor,fn);
                     }
@@ -117,9 +117,10 @@ public class Parser {
                     if (divisao == null) throw new CasaInteligenteException("Divisão Não Identificada");
 
                     String[] campos = linhaPartida[1].split(",");
-                    StringBuilder nome = new StringBuilder();
+                    StringBuilder nomesb = new StringBuilder();
                     int rand_num = num.nextInt(999999);
-                    nome.append("smtblb-").append(rand_num);
+                    nomesb.append("smtblb-").append(rand_num);
+                    String nome= nomesb.toString();
 
                     int tone = -1;
                     switch (campos[0]){
@@ -133,7 +134,7 @@ public class Parser {
                     boolean state = false;
                     if (rand_num % 3 == 1) state = true;
 
-                    SmartDevice sd = new SmartBulb(nome.toString(), state, 1.0f, tone, dimensao, valor_fixo);
+                    SmartDevice sd = new SmartBulb(nome, state, 1.0f, tone, dimensao, valor_fixo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -183,11 +184,8 @@ public class Parser {
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
-
-                default -> System.out.println(linhaPartida[0]+"Linha Inválida/Vazia");
             }
         }
-        //lista_casas.remove("casa0");
         return lista_casas;
     }
 
@@ -203,29 +201,30 @@ public class Parser {
 
     public HashMap<String,Fornecedor> energyConfig() throws FileNotFoundException, FornecedorException {
 
-        HashMap<String, Fornecedor> lista_fns = new HashMap<>();
-        List<String> file_lines = lerFicheiro();
+        List<String> linhas = lerFicheiro();
         String[] linhaPartida;
-        Fornecedor fn = null;
+        HashMap<String,Fornecedor> fornecedores = new HashMap<>();
 
-        for (String linha : file_lines) {
+        Random num= new Random();
 
+        for (String linha : linhas) {
             linhaPartida = linha.split(":", 2);
-
-            if(linhaPartida[0].equals("Fornecedores.Fornecedor")){
-                if (!lista_fns.containsKey(linhaPartida[1])) {
-                    Random num= new Random();
+            if (linhaPartida[0].equals("Fornecedor")) {
+                if (!fornecedores.containsKey(linhaPartida[1])) {
+                    Fornecedor fn = null;
+                    String nome_fornecedor = linhaPartida[1];
                     int num_random = num.nextInt(3);
-                    switch (num_random){
-                        case(0) ->fn = new FornecedorA(linhaPartida[1],1,10,5);
-                        case(1) ->fn = new FornecedorB(linhaPartida[1],2,15,10);
-                        case(2) ->fn = new FornecedorC(linhaPartida[1],3,20,15);
+
+                    switch (num_random) {
+                        case (0) -> fn = new FornecedorA(nome_fornecedor, 1, 10, 5);
+                        case (1) -> fn = new FornecedorB(nome_fornecedor, 2, 15, 10);
+                        case (2) -> fn = new FornecedorC(nome_fornecedor, 3, 10, 15);
                     }
+                    fornecedores.put(nome_fornecedor, fn);
                 }
-                lista_fns.put(linhaPartida[1],fn);
             }
         }
-        return lista_fns;
+        return  fornecedores;
     }
 
     public List<String> lerFicheiro() throws FileNotFoundException {

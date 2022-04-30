@@ -20,48 +20,53 @@ abstract class Fornecedor implements Serializable {
     }
 
     public Fornecedor(String name) throws FornecedorException{
-        if (name.equals("")) throw new FornecedorException("Sem Nome");
+        if (name==null) throw new FornecedorException("Sem Nome");
         this.name = name;
         this.valor_base = 0;
         this.imposto = 0;
         this.desconto = 0;
     }
     public Fornecedor(String name, float valor_base, float imposto, float desconto) throws FornecedorException {
-        if (name.equals("") || valor_base<0 || imposto<0 || desconto<0) throw new FornecedorException("Sem Nome/Valores Negativos");
-        this.name = name;
-        this.valor_base = valor_base;
-        this.imposto= imposto;
-        this.desconto = desconto;
+        setName(name);
+        setValor_base(valor_base);
+        setImposto(imposto);
+        setDesconto(desconto);
+
     }
 
     public Fornecedor(Fornecedor sup) throws FornecedorException{
-        if (sup.getName().equals("") || sup.getValor_base()<0 || sup.getImposto()<0 || sup.getDesconto()<0) throw new FornecedorException("Sem Nome/Valores Negativos");
-        this.name = sup.getName();
-        this.valor_base = sup.getValor_base();
-        this.imposto = sup.getImposto();
-        this.desconto = sup.getDesconto();
+        setName(sup.getName());
+        setValor_base(sup.getValor_base());
+        setImposto(sup.getImposto());
+        setDesconto(sup.getDesconto());
     }
 
     public String getName() {return this.name;}
 
-    public float getValor_base() {return this.valor_base;}
+    public float getValor_base() {
+        return this.valor_base;}
 
-    public float getImposto() {return this.imposto;}
+    public float getImposto()  {
+        return this.imposto;}
 
-    public float getDesconto() {return this.desconto;}
+    public float getDesconto() {
+        return this.desconto;}
 
-    public void setName(String name) {this.name = name;}
+    public void setName(String name)throws FornecedorException {
+        if (this.desconto>100 || this.desconto<0) throw new FornecedorException("Nome Vazio");
+        this.name = name;
+    }
 
     public void setValor_base(float valor_base) throws FornecedorException{
         if(valor_base<0) throw new FornecedorException("Valor Base Negativo");
         this.valor_base = valor_base;}
 
     public void setImposto(float imposto) throws FornecedorException {
-        if(imposto<0) throw new FornecedorException("Imposto Negativo");
+        if(imposto<0 || imposto>100) throw new FornecedorException("Valor de Imposto Inválido");
         this.imposto = imposto;}
 
     public void setDesconto(float desconto) throws FornecedorException{
-        if(desconto<0) throw new FornecedorException("Desconto Negativo");
+        if(desconto<0 || desconto>100) throw new FornecedorException("Desconto Negativo");
         this.desconto = desconto;}
 
     public boolean equals(Object o) {
