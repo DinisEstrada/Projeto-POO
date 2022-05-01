@@ -46,21 +46,20 @@ Tarefas já feitas:
 -> Arranjar forma de criar fornecedores (Zé)
 -> Parser do ficheiro e criação automática da configuração de casas e smartdevices (Zé)
 -> Error Handling e como Guardar informação num ficheiro (Zé)
-
-
+-> tirar faturas por cada casa (prov criar classe fatura) (Zé)
+-> Criar uma classe estado com todas as casas e fornecedores e as suas configurações (Zé)
 
 Tarefas por fazer:
--> Criar testes /*Extra para automatizar processo de testagem*/ 
+-> Criar testes Casa-SmartDevice-Fornecedor- /*Extra para automatizar processo de testagem*/
+-> Verificar se esta tudo por composição.
 -> MENU e SUBMENUS (DINIS)
--> Criar uma classe estado com todas as casas e fornecedores e as suas configurações (Zé)
--> tirar faturas por cada casa (prov criar classe fatura) (Zé)
 -> fazer metodos de estatisticas 
   - casa que gastou mais
   - fornecedor com maior volume de faturação
   - todas as faturas por fornecedor
   - casas com maior consumo durante X tempo
 -> executar uma simulação (calculo do consumo na evolução temporal de um estado)
--> Permitir mudanças durante a simulação 
+-> Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte)
   - mudar de fornecedor
   - ligar e desligar dispositivos
   - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
