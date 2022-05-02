@@ -1,4 +1,5 @@
 import ErrorHandling.CasaInteligenteException;
+import ErrorHandling.FaturaException;
 import ErrorHandling.FornecedorException;
 import ErrorHandling.SmartDeviceException;
 import java.io.*;
@@ -170,7 +171,7 @@ public class CasaInteligente implements Serializable, Comparable {
 
     public int compareTo(Object o) {
         CasaInteligente casa = (CasaInteligente) o;
-        return (int) (this.consumoCasa()-casa.consumoCasa());
+        return (int) (this.custoCasa()-casa.custoCasa());
     }
 
 
@@ -261,10 +262,10 @@ public class CasaInteligente implements Serializable, Comparable {
         return this.locations.containsKey(room);
     }
 
-    public boolean roomHasDevice (String room, String id) {return this.locations.get(room).contains(id);}
+    public boolean roomHasDevice(String room, String id) {return this.locations.get(room).contains(id);}
 
 
-    public double consumoRoom(String room) throws CasaInteligenteException{
+    public double custoRoom(String room) throws CasaInteligenteException{
         if(this.locations.get(room)==null) throw new CasaInteligenteException("Divisão "+room+"não existe");
 
         return this.locations.get(room).stream()
@@ -279,14 +280,30 @@ public class CasaInteligente implements Serializable, Comparable {
 
     }
 
+    public double custoCasa(){
+        return this.devices.values().stream()
+                .filter(SmartDevice::getOn)
+                .mapToDouble(a -> {
+                try {
+                    return this.fornecedor.formulaPreco(a,this);
+                } catch (SmartDeviceException | CasaInteligenteException | FornecedorException e) {
+                    throw new RuntimeException("Impossível Computar o Consumo da Casa"+e);
+                }
+                }).sum() +
+                this.devices.values().stream()
+                        .mapToDouble(SmartDevice::getCusto)
+                        .sum();
+    }
+
     public double consumoCasa(){
-        return this.devices.values().stream().filter(SmartDevice::getOn).mapToDouble(a -> {
-            try {
-                return this.fornecedor.formulaPreco(a,this);
-            } catch (SmartDeviceException | CasaInteligenteException | FornecedorException e) {
-                throw new RuntimeException("Impossível Computar o Consumo da Casa"+e);
-            }
-        }).sum();
+        return this.devices.values().stream()
+                .filter(SmartDevice::getOn)
+                .mapToDouble(SmartDevice::getConsumo)
+                .sum();
+    }
+
+    public Fatura faturaCasa(int periodo) throws FaturaException {
+        return new Fatura(this,periodo);
     }
 
 
@@ -294,9 +311,6 @@ public class CasaInteligente implements Serializable, Comparable {
        return this.devices.keySet().size();
     }
 
-    public Set<String> rooms(){
-        return this.locations.keySet();
-    }
 
     public List<SmartDevice> getDevicesinRoom(String room){
         List<SmartDevice> devs = new ArrayList<>();
@@ -307,7 +321,7 @@ public class CasaInteligente implements Serializable, Comparable {
         return devs;
     }
 
-    public List<Boolean> getRoomState(String room) throws CasaInteligenteException {
+    public List<Boolean> getRoomStates(String room) throws CasaInteligenteException {
 
         if(room == null) throw new CasaInteligenteException("Divisão não existe");
 

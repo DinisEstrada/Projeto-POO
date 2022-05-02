@@ -1,10 +1,5 @@
-import ErrorHandling.FaturaException;
-
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Estado implements Serializable {
 
@@ -64,13 +59,23 @@ public class Estado implements Serializable {
         }
     }
 
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        if( obj == null || obj.getClass()!=this.getClass()) return false;
+        Estado stt = (Estado) obj;
+        return this.housesConfig.equals(stt.getHousesConfig()) && this.fornecedores.equals(stt.getFornecedores());
+     }
+
     public String toString(){
         return this.housesConfig.entrySet() + this.housesConfig.entrySet().toString();
     }
 
-    public Fatura faturaCasa(CasaInteligente casa, int dias) throws FaturaException {
-        return new Fatura(casa,dias);
+    public Estado clone(){
+        return new Estado(this);
     }
+
+    //---------------------------------------------------------------------
+
 
     public void adicionaCasa(CasaInteligente casa){
         this.housesConfig.put(casa.getOwner(),casa);
@@ -83,7 +88,7 @@ public class Estado implements Serializable {
             this.fornecedores.put(fornecedor.getName(),fornecedor);
     }
 
-    public void removeCasa(Fornecedor fornecedor){
+    public void removeFornecedor(Fornecedor fornecedor){
         this.housesConfig.remove(fornecedor.getName());
     }
 
@@ -104,5 +109,21 @@ public class Estado implements Serializable {
         fos.close();
         return c;
     }
+
+    /*Estatisticas
+    - casa que gastou mais
+    - fornecedor com maior volume de faturação
+    - todas as faturas por fornecedor
+    - casas com maior consumo durante X tempo
+*/
+    public CasaInteligente casaMaisGastou(){
+        TreeSet<CasaInteligente> set_casas = new TreeSet<>();
+
+        this.housesConfig.values().stream()
+                        .forEach(a->set_casas.add(a.clone()));
+
+        return set_casas.first();
+    }
+
 
 }

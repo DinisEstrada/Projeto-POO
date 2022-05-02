@@ -104,7 +104,7 @@ public class Parser {
 
                     cont ++;
                     casaMaisRecente = createCasa(linhaPartida[1], fornecedores);
-                    lista_casas.put(key, casaMaisRecente);
+                    lista_casas.put(casaMaisRecente.getOwner(), casaMaisRecente);
                 }
                 case "Divisao" -> {
                     if (casaMaisRecente == null) throw new CasaInteligenteException("Casa Não Identificada");
