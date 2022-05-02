@@ -92,9 +92,9 @@ public class Parser {
                         int num_random = num.nextInt(3);
 
                         switch (num_random){
-                            case(0) -> fn = new FornecedorA(nome_fornecedor,1,10,5);
-                            case(1) -> fn = new FornecedorB(nome_fornecedor,2,15,10);
-                            case(2) -> fn = new FornecedorC(nome_fornecedor,3,10,15);
+                            case(0) -> fn = new FornecedorA(nome_fornecedor,0.1f,6,5);
+                            case(1) -> fn = new FornecedorB(nome_fornecedor,0.15f,10,15);
+                            case(2) -> fn = new FornecedorC(nome_fornecedor,0.2f,13,20);
                         }
                         fornecedores.put(nome_fornecedor,fn);
                     }
@@ -128,13 +128,13 @@ public class Parser {
                         case "Neutral" -> tone = 1;
                         case "Cold" -> tone = 0;
                     }
-                    float valor_fixo = 1.4f;
+                    float valor_fixo = 0.005f;
                     float dimensao = Float.parseFloat(campos[1]);
 
                     boolean state = false;
                     if (rand_num % 3 == 1) state = true;
 
-                    SmartDevice sd = new SmartBulb(nome, state, 1.0f, tone, dimensao, valor_fixo);
+                    SmartDevice sd = new SmartBulb(nome, state, 0.1f, tone, dimensao, valor_fixo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -154,12 +154,12 @@ public class Parser {
                     Resolution res = new Resolution(width,heigth);
 
                     float file_size = Float.parseFloat(campos[4]);
-                    float compresao = Float.parseFloat(campos[5]);
+                    float compressao = Float.parseFloat(campos[5]);
 
                     boolean state = false;
                     if (rand_num % 3 == 1) state=true;
 
-                    SmartDevice sd = new SmartCamera(nome, state, 2.0f,res,file_size,compresao);
+                    SmartDevice sd = new SmartCamera(nome, state, 0.15f,res,file_size,compressao);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -180,7 +180,7 @@ public class Parser {
                     boolean state = false;
                     if (rand_num%3 == 1) state=true;
 
-                    SmartDevice sd = new SmartSpeaker(nome, state, 3.0f, volume, channel, brand, 1.5f);
+                    SmartDevice sd = new SmartSpeaker(nome, state, 0.20f, volume, channel, brand, 0.5f);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }

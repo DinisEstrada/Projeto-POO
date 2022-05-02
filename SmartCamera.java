@@ -35,7 +35,7 @@ public class SmartCamera extends SmartDevice {
         this.file_size = file_size;
         this.compression = compression;
 
-        float consumo = (this.resolution.getRes()*this.file_size) * this.compression;
+        float consumo = (float) Math.sqrt((double) this.resolution.getRes()*this.file_size) * this.compression/100;
         super.setConsumo(consumo);
 
     }
@@ -50,7 +50,7 @@ public class SmartCamera extends SmartDevice {
         this.file_size = smt.getFileSize();
         this.compression = smt.getCompression();
 
-        float consumo = (smt.getResolution().getRes()*smt.getFileSize()) * smt.getCompression();
+        float consumo = (float) Math.sqrt((double)smt.getResolution().getRes()*smt.getFileSize()) * smt.getCompression()/100;
 
         super.setConsumo(consumo);
     }

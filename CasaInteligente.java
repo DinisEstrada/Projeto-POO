@@ -171,7 +171,7 @@ public class CasaInteligente implements Serializable, Comparable {
 
     public int compareTo(Object o) {
         CasaInteligente casa = (CasaInteligente) o;
-        return (int) (this.custoCasa()-casa.custoCasa());
+        return (int) (casa.custoCasa()-this.custoCasa());
     }
 
 
@@ -303,7 +303,14 @@ public class CasaInteligente implements Serializable, Comparable {
     }
 
     public Fatura faturaCasa(int periodo) throws FaturaException {
-        return new Fatura(this,periodo);
+        return new Fatura(this.clone(),periodo);
+    }
+
+
+    public Set<String> listaDevices(){
+        Set<String> lista = new HashSet<>();
+        this.getDevices().values().stream().forEach(a-> lista.add(a.getID()));
+        return lista;
     }
 
 

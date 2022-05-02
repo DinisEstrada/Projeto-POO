@@ -66,14 +66,32 @@ public class Fatura {
         this.custo = custo;
     }
 
+    public Fatura clone(){
+        try {
+            return new Fatura(this);
+        } catch (FaturaException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String toString(){
         return "\n### Fatura ###"+
-                "\nCasa:" + this.casa.getOwner() +
-                "\nFornecedor: " + this.casa.getFornecedor().getName() +
+                "\nCasa: " + this.casa.getOwner() +
+                "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
                 "\nPeríodo: " + this.periodo +
-                "\nConsumo" + this.consumo+
-                " kWh\nValor:" + this.custo+" €";
+                " dia(s)\nConsumo: " + this.consumo+
+                " kWh\nValor: " + this.custo+" €";
 
+    }
+
+    public boolean equals(Object o){
+        if (this==o) return true;
+        if (o==null || this.getClass()!=o.getClass()) return false;
+        Fatura ft = (Fatura) o;
+        return (this.casa.equals(ft.getCasa()) &&
+                this.periodo == ft.getPeriodo() &&
+                this.getConsumo() == this.getConsumo() &&
+                this.getCusto() == ft.getCusto());
     }
 
     //---------------------------------------------------
@@ -82,16 +100,9 @@ public class Fatura {
         return (float) casa.consumoCasa()*this.periodo;
     }
 
-    public float valor_fatura(){
 
-        return (float) this.casa.getDevices().values().stream()
-                .filter(SmartDevice::getOn).mapToDouble(a-> {
-                    try {
-                        return this.casa.getFornecedor().formulaPreco(a,this.casa)*this.periodo;
-                    } catch (SmartDeviceException | CasaInteligenteException | FornecedorException e) {
-                        throw new RuntimeException(e);
-                    }}).sum() +
-                (float) this.casa.getDevices().values().stream().mapToDouble(SmartDevice::getCusto).sum();
+    public float valor_fatura() {
+
+        return (float) this.casa.custoCasa()*this.periodo;
     }
-
 }

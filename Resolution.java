@@ -40,7 +40,7 @@ public class Resolution implements Serializable {
         double w = this.width;
         double h = this.height;
 
-        return  (float) Math.sqrt(Math.pow(h,2.0) + Math.pow(w,2.0));
+        return  (float) Math.sqrt(h+w);
     }
 
     public Resolution clone(){return new Resolution(this);}

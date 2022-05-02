@@ -12,14 +12,10 @@ public class testes {
         try {
             Parser hq = new Parser("logs.csv");
 
-            CasaInteligente casa1 = hq.housesConfig().get("Miguel Velho Raposo");
+            Estado state = new Estado(hq.housesConfig(),hq.energyConfig());
 
-            List<Integer> list = new ArrayList<>();
-            casa1.getDevices().values().stream().map(SmartDevice::getID).collect(list);
-            System.out.println();
-            System.out.println(casa1.faturaCasa(1));
-
-
+            System.out.println(state.casaMaisGastou().faturaCasa(1));
+            System.out.println(state.casaMaisGastou().faturaCasa(30));
 
         } catch (Exception e) {
             System.out.println(e);
