@@ -64,3 +64,7 @@ Tarefas por fazer:
   - ligar e desligar dispositivos
   - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
 -> Automatizar as mudanças com um parser de informação
+
+
+//COISAS A CORRIGIR
+quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices
