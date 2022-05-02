@@ -82,11 +82,11 @@ public class SmartSpeaker extends SmartDevice {
             throw new RuntimeException("Clone Failed"+e);
         }
     }
-
+    @Override
     public boolean equals(Object o){
         if (!super.equals(o)) return false;
         if (this==o) return true;
-        if (this.getClass()!=o.getClass()) return false;
+        if (!(o instanceof SmartSpeaker)) return false;
         SmartSpeaker smt = (SmartSpeaker) o;
         return (this.volume==smt.getVolume() &&
                 this.getChannel().equals(smt.getChannel()) &&

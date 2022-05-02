@@ -1,5 +1,8 @@
+import ErrorHandling.FaturaException;
+
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Estado implements Serializable {
 
@@ -110,12 +113,27 @@ public class Estado implements Serializable {
         return c;
     }
 
+    public HashMap<String,Fatura> geradorFaturas(int periodo){
+        HashMap<String,Fatura> fats = new HashMap<>();
+
+        this.housesConfig.values().stream().forEach(casa -> {
+            try {
+                fats.put(casa.getOwner(), casa.faturaCasa(periodo));
+            } catch (FaturaException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return fats;
+    }
+
     /*Estatisticas
-    - casa que gastou mais
-    - fornecedor com maior volume de faturação
-    - todas as faturas por fornecedor
+    - casa que gastou mais (done)
+    - fornecedor com maior volume de faturação (done)
+    - todas as faturas por fornecedor (done)
     - casas com maior consumo durante X tempo
 */
+
     public CasaInteligente casaMaisGastou(){
         TreeSet<CasaInteligente> set_casas = new TreeSet<>();
 
@@ -125,5 +143,48 @@ public class Estado implements Serializable {
         return set_casas.first();
     }
 
+    public TreeSet<CasaInteligente> casasMaiorConsumo(int periodo){
+        Comparator<CasaInteligente> comp = (o1, o2) -> {
+            if (o1.consumoCasa()*periodo  < o2.consumoCasa()*periodo ) return 1;
+            else if (o1.consumoCasa()*periodo > o2.consumoCasa()*periodo) return -1;
+            else {
+                return o1.getOwner().compareTo(o2.getOwner());
+            }
+
+        };
+        TreeSet<CasaInteligente> set_casas = new TreeSet<>(comp);
+        this.housesConfig.values().stream()
+                .forEach(a->set_casas.add(a.clone()));
+
+        return set_casas;
+    }
+
+    public TreeSet<Fatura> faturasFornecedor(Fornecedor forn) {
+        TreeSet<Fatura> lista = new TreeSet<>();
+
+        this.housesConfig.values().stream().filter(a-> a.getFornecedor().getName().equals(forn.getName())).forEach(a -> {
+            try {
+                lista.add(a.faturaCasa(1).clone());
+            } catch (FaturaException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        return lista;
+    }
+
+    public Fornecedor fornecedorMaisFaturou(){
+        Fornecedor maior = null;
+        double consumomaior=0;
+        double consumoforn=0;
+        for(Fornecedor forn : this.fornecedores.values()){
+            consumoforn =faturasFornecedor(forn).stream().mapToDouble(Fatura::valor_fatura).sum();
+           if (consumomaior <  consumoforn) {
+               consumomaior =  consumoforn;
+               maior = forn ;
+           }
+        }
+        return maior;
+    }
 
 }

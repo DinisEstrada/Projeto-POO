@@ -171,8 +171,13 @@ public class CasaInteligente implements Serializable, Comparable {
 
     public int compareTo(Object o) {
         CasaInteligente casa = (CasaInteligente) o;
-        return (int) (casa.custoCasa()-this.custoCasa());
+        if (casa.custoCasa()>this.custoCasa()) return 1;
+        else if (casa.custoCasa()<this.custoCasa()) return -1;
+        else {
+            return casa.getOwner().compareTo( this.getOwner());
+        }
     }
+
 
 
     //---------------------------------------------------------------------------------
@@ -227,13 +232,7 @@ public class CasaInteligente implements Serializable, Comparable {
     }
 
     public void setAllOn(boolean b) throws CasaInteligenteException {
-        for(String room : this.locations.keySet()){
-            if(room == null) throw new CasaInteligenteException("Divisão não existe");
-            for (String id : this.locations.get(room)){
-                if(this.devices.get(id) == null) throw new CasaInteligenteException("Device "+ id + "não existe");
-                this.devices.get(id).setOn(b);
-            }
-        }
+        this.devices.values().stream().forEach(a->a.setOn(b));
     }
 
     public void turnAllOn() throws CasaInteligenteException {

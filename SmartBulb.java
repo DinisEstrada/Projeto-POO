@@ -88,13 +88,15 @@ public class SmartBulb extends SmartDevice {
         }
     }
 
+    @Override
     public boolean equals(Object o){
         if (!super.equals(o)) return false;
         if (this==o) return true;
-        if (this.getClass()!=o.getClass()) return false;
+        if (!(o instanceof SmartBulb)) return false;
         SmartBulb smt = (SmartBulb) o;
-        return (this.getTone()==smt.getTone() &&
-                this.getDimensao()==smt.getDimensao());
+        return (this.tone==smt.getTone() &&
+                this.dimensao==smt.getDimensao() &&
+                this.valor_fixo == smt.getValorFixo());
     }
 
     public String toString() {

@@ -4,6 +4,7 @@ import ErrorHandling.*;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class testes {
 
@@ -14,8 +15,13 @@ public class testes {
 
             Estado state = new Estado(hq.housesConfig(),hq.energyConfig());
 
-            System.out.println(state.casaMaisGastou().faturaCasa(1));
-            System.out.println(state.casaMaisGastou().faturaCasa(30));
+            state.casasMaiorConsumo(5);
+            //System.out.println(state.casaMaisGastou().faturaCasa(5));
+            //System.out.println(state.casasMaiorConsumo(5));
+
+            for(CasaInteligente casa : state.casasMaiorConsumo(5)){
+                System.out.println(casa.faturaCasa(5));
+            }
 
         } catch (Exception e) {
             System.out.println(e);

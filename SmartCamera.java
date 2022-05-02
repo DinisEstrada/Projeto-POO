@@ -85,13 +85,15 @@ public class SmartCamera extends SmartDevice {
         }
     }
 
+    @Override
     public boolean equals(Object o){
         if (!super.equals(o)) return false;
         if (this==o) return true;
-        if (this.getClass()!=o.getClass()) return false;
+        if (!(o instanceof SmartCamera)) return false;
         SmartCamera smt = (SmartCamera) o;
-        return (this.getResolution()==smt.getResolution() &&
-                this.getFileSize()==smt.getFileSize());
+        return (this.resolution.equals(smt.getResolution()) &&
+                this.file_size==smt.getFileSize() &&
+                this.compression == smt.getCompression());
     }
 
     public String toString() {

@@ -3,7 +3,9 @@ import ErrorHandling.FaturaException;
 import ErrorHandling.FornecedorException;
 import ErrorHandling.SmartDeviceException;
 
-public class Fatura {
+import java.io.*;
+
+public class Fatura implements Comparable, Serializable {
 
     private CasaInteligente casa;
     private int periodo;
@@ -92,6 +94,34 @@ public class Fatura {
                 this.periodo == ft.getPeriodo() &&
                 this.getConsumo() == this.getConsumo() &&
                 this.getCusto() == ft.getCusto());
+    }
+
+
+    public int compareTo(Object o) {
+        Fatura ft = (Fatura) o;
+        if (ft.getCusto()>this.custo) return 1;
+        else if (ft.getCusto()<this.custo) return -1;
+        else {
+           return ft.getCasa().getOwner().compareTo( this.casa.getOwner());
+        }
+    }
+
+    public void guardaFatura(String nomeFicheiro) throws FileNotFoundException, IOException {
+        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(this);
+        oos.flush();
+        oos.close();
+        fos.close();
+    }
+
+    public Fatura carregaFatura(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream fos = new FileInputStream(nomeFicheiro);
+        ObjectInputStream oos = new ObjectInputStream(fos);
+        Fatura c = (Fatura) oos.readObject();
+        oos.close();
+        fos.close();
+        return c;
     }
 
     //---------------------------------------------------
