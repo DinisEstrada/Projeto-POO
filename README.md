@@ -1,8 +1,8 @@
 # Projeto-POO
 Projeto POO | 2ºano | 2ºSemestre | Universidade do Minho 2021/2022
 
-
-###SmartDevice
+ 
+### SmartDevice
 É a super classe que integra SmartBulb,SmartSpeaker e SmartCamera( Resolução integra smartcamera como v.i.) como subclasses.
 Tem como v.i. comuns:
 - Id : dispositivo
@@ -61,18 +61,18 @@ Tarefas já feitas:
 - tirar faturas por cada casa (prov criar classe fatura) (Zé)
 - Criar uma classe estado com todas as casas e fornecedores e as suas configurações (Zé)
 - fazer metodos de estatisticas (Zé)
-  -- casa que gastou mais
-  -- fornecedor com maior volume de faturação
-  -- todas as faturas por fornecedor
-  -- casas com maior consumo durante X tempo
+  - casa que gastou mais
+  - fornecedor com maior volume de faturação
+  - todas as faturas por fornecedor
+  - casas com maior consumo durante X tempo
 
 Tarefas por fazer:
 - MENU e SUBMENUS (DINIS)
 - executar uma simulação (calculo do consumo na evolução temporal de um estado)
 - Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte)
-  -- mudar de fornecedor
-  -- ligar e desligar dispositivos
-  -- mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
+  - mudar de fornecedor
+  - ligar e desligar dispositivos
+  - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
 - Automatizar as mudanças com um parser de informação
   - ideia: pede-se o periodo de faturação e entre ele criar mini faturas entre cada mudança de estado. guarda-se as mini faturas e depois somam-se todas.
 - [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
