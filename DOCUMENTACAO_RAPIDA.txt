@@ -27,6 +27,16 @@ V.I. sao as variaveis da formula
 
 clone e tostring tambem são abstratos para funcionarem direito.
 
+### Fatura 
+Classe que tira faturas de uma casa,para isso conta com as variaveis de instancia:
+- casa: nome do prop
+- data inicio (formato da data String : "dd-mm-yyyy")
+- data de fim
+- Consumo durantem o periodo
+- valor da fatura durante o perido
+para tirar fatura é so ter uma casa criada e fazer casa.faturaCasa(inicio, fim);
+
+
 ### Parser
 Objetivo é receber um logs.csv e construir tudo de forma automática. A estrutura do config pode ser vista nos avisos da bb
 V.I. é o ficheiro.
