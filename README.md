@@ -52,7 +52,7 @@ Todas os metodos das classes fazem "throw" dos erros para serem todos colecionad
 Também se consegue controlar o input de valores não válidos, assim como, assegurar que metodos funcionam todos com os valores corretos ou dão erro e não executam. 
 
 
-Tarefas já feitas:
+### Tarefas já feitas:
 - Criar classe smartdevice e as suas subclasses (Zé)
 - Criar a classe casa Inteligente (Zé)
 - Arranjar forma de criar fornecedores (Zé)
@@ -65,14 +65,14 @@ Tarefas já feitas:
   - fornecedor com maior volume de faturação
   - todas as faturas por fornecedor
   - casas com maior consumo durante X tempo
-
-Tarefas por fazer:
-- MENU e SUBMENUS (DINIS)
-- executar uma simulação (calculo do consumo na evolução temporal de um estado)
 - Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte)
   - mudar de fornecedor
   - ligar e desligar dispositivos
   - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
+ 
+### Tarefas por fazer:
+- MENU e SUBMENUS (DINIS)
+- executar uma simulação (calculo do consumo na evolução temporal de um estado)
 - Automatizar as mudanças com um parser de informação
   - ideia: pede-se o periodo de faturação e entre ele criar mini faturas entre cada mudança de estado. guarda-se as mini faturas e depois somam-se todas.
 - [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
