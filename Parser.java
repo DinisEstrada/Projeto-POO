@@ -93,16 +93,16 @@ public class Parser {
 
                         switch (num_random){
                             case(0) -> fn = new FornecedorA(nome_fornecedor,0.1f,6,5);
-                            case(1) -> fn = new FornecedorB(nome_fornecedor,0.15f,10,15);
-                            case(2) -> fn = new FornecedorC(nome_fornecedor,0.2f,13,20);
+                            case(1) -> fn = new FornecedorB(nome_fornecedor,0.1f,10,15);
+                            case(2) -> fn = new FornecedorC(nome_fornecedor,0.1f,13,20);
                         }
                         fornecedores.put(nome_fornecedor,fn);
                     }
                 }
                 case "Casa" -> {
-                    String key = "casa" + cont;
+                   // String key = "casa" + cont;
 
-                    cont ++;
+                    //cont ++;
                     casaMaisRecente = createCasa(linhaPartida[1], fornecedores);
                     lista_casas.put(casaMaisRecente.getOwner(), casaMaisRecente);
                 }
@@ -134,7 +134,7 @@ public class Parser {
                     boolean state = false;
                     if (rand_num % 3 == 1) state = true;
 
-                    SmartDevice sd = new SmartBulb(nome, state, 0.1f, tone, dimensao, valor_fixo);
+                    SmartDevice sd = new SmartBulb(nome, state, 0.05f, tone, dimensao, valor_fixo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -154,12 +154,12 @@ public class Parser {
                     Resolution res = new Resolution(width,heigth);
 
                     float file_size = Float.parseFloat(campos[4]);
-                    float compressao = Float.parseFloat(campos[5]);
+                    float consumo = Float.parseFloat(campos[5]);
 
                     boolean state = false;
                     if (rand_num % 3 == 1) state=true;
 
-                    SmartDevice sd = new SmartCamera(nome, state, 0.15f,res,file_size,compressao);
+                    SmartDevice sd = new SmartCamera(nome, state, 0.1f,res,file_size,consumo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -176,11 +176,12 @@ public class Parser {
                     int volume = Integer.parseInt(campos[0]);
                     String channel = campos[1];
                     String brand = campos[2];
+                    float consumo = Float.parseFloat(campos[3]);
 
                     boolean state = false;
                     if (rand_num%3 == 1) state=true;
 
-                    SmartDevice sd = new SmartSpeaker(nome, state, 0.20f, volume, channel, brand, 0.5f);
+                    SmartDevice sd = new SmartSpeaker(nome, state, 0.15f, volume, channel, brand, consumo);
 
                     casaMaisRecente.addDevice(sd, divisao);
                 }
@@ -195,6 +196,7 @@ public class Parser {
         String nome = campos[0];
         int nif = Integer.parseInt(campos[1]);
         Fornecedor fornecedor = forns.get(campos[2]);
+        if (fornecedor == null) throw new CasaInteligenteException("Fornecedor não listado");
 
         return new CasaInteligente(nome, nif,fornecedor);
     }
@@ -239,6 +241,7 @@ public class Parser {
         } catch (FileNotFoundException e) {
            throw  new FileNotFoundException("An error occurred. File not located or not open correctly");
         }
+
         return lines;
     }
 

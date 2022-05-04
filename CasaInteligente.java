@@ -3,6 +3,7 @@ import ErrorHandling.FaturaException;
 import ErrorHandling.FornecedorException;
 import ErrorHandling.SmartDeviceException;
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -137,10 +138,10 @@ public class CasaInteligente implements Serializable, Comparable {
     public String toString(){
         return  "\n### House ###" +
                 "\nOwner: " + this.owner +
-                "\nNIF: " + this.nif +
-                "\nFornecedor: " + this.fornecedor +
+                " | NIF: " + this.nif +
+                " | Fornecedor: " + this.fornecedor +
                 "\nDevices " + this.devices.toString() +
-                "\nRooms: " + this.locations.toString();
+                "\n\nRooms: " + this.locations.toString();
     }
     public CasaInteligente clone(){
         try {
@@ -183,8 +184,11 @@ public class CasaInteligente implements Serializable, Comparable {
     //---------------------------------------------------------------------------------
 
 
-    public void addDevice(SmartDevice s, String room) {
+    public void addDevice(SmartDevice s, String room) throws CasaInteligenteException {
+        if(existsDevice(s.getID())) throw new CasaInteligenteException("Device ID já existente");
+
         this.devices.put(s.getID(),s.clone());
+
         if(this.locations.containsKey(room)) this.locations.get(room).add(s.getID());
         else {
             addRoom(room);
@@ -192,18 +196,22 @@ public class CasaInteligente implements Serializable, Comparable {
         }
     }
 
-    public void removeDevice(SmartDevice s) {
+    public void removeDevice(SmartDevice s) throws CasaInteligenteException {
+        if(!existsDevice(s.getID())) throw new CasaInteligenteException("Device ID não existe");
         this.devices.remove(s.getID());
         for(List<String> devs_ids : this.locations.values()){
             devs_ids.remove(s.getID());
         }
     }
 
-    public void turnDeviceOn(String id) {
+    public void turnDeviceOn(String id) throws CasaInteligenteException {
+        if(!existsDevice(id)) throw new CasaInteligenteException("Device ID não existe");
         this.devices.get(id).turnOn();
     }
 
-    public void turnDeviceOFF(String id) {this.devices.get(id).turnOff();}
+    public void turnDeviceOFF(String id) throws CasaInteligenteException {
+        if(!existsDevice(id)) throw new CasaInteligenteException("Device ID não existe");
+        this.devices.get(id).turnOff();}
 
     public boolean existsDevice(String id) {return this.devices.containsKey(id);}
 
@@ -244,13 +252,14 @@ public class CasaInteligente implements Serializable, Comparable {
     }
 
 
-    public void addRoom(String s) {
+    public void addRoom(String room) throws CasaInteligenteException {
+        if(this.locations.containsKey(room)) throw new CasaInteligenteException("Divisão " + room + " não existe");
         List<String> ids = new ArrayList<>();
-        this.locations.put(s,ids);
+        this.locations.put(room,ids);
     }
 
     public void addRoom(String room, List<String> ids) throws CasaInteligenteException {
-
+        if(this.locations.containsKey(room)) throw new CasaInteligenteException("Divisão " + room + " não existe");
         if(ids==null) throw new CasaInteligenteException("Lista de Devices null");
 
         List<String> ids_cp = new ArrayList<>(ids);
@@ -301,8 +310,8 @@ public class CasaInteligente implements Serializable, Comparable {
                 .sum();
     }
 
-    public Fatura faturaCasa(int periodo) throws FaturaException {
-        return new Fatura(this.clone(),periodo);
+    public Fatura faturaCasa(String inicio, String fim) throws FaturaException, ParseException {
+        return new Fatura(this,inicio, fim);
     }
 
 

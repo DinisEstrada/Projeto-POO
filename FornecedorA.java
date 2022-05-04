@@ -17,11 +17,11 @@ public class FornecedorA extends Fornecedor{
     }
 
     public String toString() {
-        return  "\n### FornecedorA ###" +
+        return  "\n\n### FornecedorA ###" +
                 "\nFornecedor: " + super.getName() +
-                "\nValorBase: " + super.getValor_base() +
-                "\nImposto: " + super.getImposto() +
-                "\nDesconto: " + super.getDesconto() +
+                " | ValorBase: " + super.getValor_base() +
+                " | Imposto: " + super.getImposto() +
+                " | Desconto: " + super.getDesconto() +
                 "\n";
     }
 

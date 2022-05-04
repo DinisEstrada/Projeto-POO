@@ -97,9 +97,9 @@ public class SmartSpeaker extends SmartDevice {
     public String toString() {
         return super.toString() +
                 "\nType: SmartSpeaker" +
-                "\nVolume: " + this.volume +
-                "\nChannel: " + this.channel +
-                "\nBrand: " + this.brand + "\n";
+                " | Volume: " + this.volume +
+                " | Channel: " + this.channel +
+                " | Brand: " + this.brand;
     }
 
 

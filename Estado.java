@@ -1,23 +1,24 @@
 import ErrorHandling.FaturaException;
 
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Estado implements Serializable {
 
-    private HashMap<String,CasaInteligente> housesConfig;
+    private HashMap<String,CasaInteligente> casas;
     private HashMap<String,Fornecedor> fornecedores;
 
     public Estado(){
-        this.housesConfig = new HashMap<>();
+        this.casas = new HashMap<>();
         this.fornecedores = new HashMap<>();
     }
 
     public Estado(HashMap<String,CasaInteligente> housesConfig, HashMap<String,Fornecedor> fornecedores){
-        this.housesConfig = new HashMap<>();
+        this.casas = new HashMap<>();
         for(Map.Entry<String,CasaInteligente> ent : housesConfig.entrySet()){
-            this.housesConfig.put(ent.getKey(),ent.getValue().clone());
+            this.casas.put(ent.getKey(),ent.getValue().clone());
         }
 
         this.fornecedores = new HashMap<>();
@@ -27,14 +28,14 @@ public class Estado implements Serializable {
     }
 
     public Estado(Estado est){
-        this.housesConfig = est.getHousesConfig();
+        this.casas = est.getCasas();
         this.fornecedores = est.getFornecedores();
     }
 
 
-    public HashMap<String, CasaInteligente> getHousesConfig() {
+    public HashMap<String, CasaInteligente> getCasas() {
         HashMap<String,CasaInteligente> casas = new HashMap<>();
-        for(Map.Entry<String,CasaInteligente> ent : this.housesConfig.entrySet()){
+        for(Map.Entry<String,CasaInteligente> ent : this.casas.entrySet()){
             casas.put(ent.getKey(),ent.getValue().clone());
         }
         return casas;
@@ -55,10 +56,10 @@ public class Estado implements Serializable {
         }
     }
 
-    public void setHousesConfig(HashMap<String, CasaInteligente> housesConfig) {
-        this.housesConfig = new HashMap<>();
-        for(Map.Entry<String,CasaInteligente> ent : housesConfig.entrySet()){
-            this.housesConfig.put(ent.getKey(),ent.getValue().clone());
+    public void setCasas(HashMap<String, CasaInteligente> casas) {
+        this.casas = new HashMap<>();
+        for(Map.Entry<String,CasaInteligente> ent : casas.entrySet()){
+            this.casas.put(ent.getKey(),ent.getValue().clone());
         }
     }
 
@@ -66,11 +67,11 @@ public class Estado implements Serializable {
         if(obj == this) return true;
         if( obj == null || obj.getClass()!=this.getClass()) return false;
         Estado stt = (Estado) obj;
-        return this.housesConfig.equals(stt.getHousesConfig()) && this.fornecedores.equals(stt.getFornecedores());
+        return this.casas.equals(stt.getCasas()) && this.fornecedores.equals(stt.getFornecedores());
      }
 
     public String toString(){
-        return this.housesConfig.entrySet() + this.housesConfig.entrySet().toString();
+        return this.casas.entrySet() + this.casas.entrySet().toString();
     }
 
     public Estado clone(){
@@ -81,10 +82,10 @@ public class Estado implements Serializable {
 
 
     public void adicionaCasa(CasaInteligente casa){
-        this.housesConfig.put(casa.getOwner(),casa);
+        this.casas.put(casa.getOwner(),casa);
     }
     public void removeCasa(CasaInteligente casa){
-        this.housesConfig.remove(casa.getOwner());
+        this.casas.remove(casa.getOwner());
     }
     public void adicionaFornecedor(Fornecedor fornecedor){
         if(!fornecedores.containsKey(fornecedor.getName()))
@@ -92,7 +93,7 @@ public class Estado implements Serializable {
     }
 
     public void removeFornecedor(Fornecedor fornecedor){
-        this.housesConfig.remove(fornecedor.getName());
+        this.casas.remove(fornecedor.getName());
     }
 
     public void guardaEstado(String nomeFicheiro) throws FileNotFoundException, IOException {
@@ -113,13 +114,13 @@ public class Estado implements Serializable {
         return c;
     }
 
-    public HashMap<String,Fatura> geradorFaturas(int periodo){
+    public HashMap<String,Fatura> geradorFaturas(String inicio, String fim){
         HashMap<String,Fatura> fats = new HashMap<>();
 
-        this.housesConfig.values().stream().forEach(casa -> {
+        this.casas.values().stream().forEach(casa -> {
             try {
-                fats.put(casa.getOwner(), casa.faturaCasa(periodo));
-            } catch (FaturaException e) {
+                fats.put(casa.getOwner(), casa.faturaCasa(inicio,fim));
+            } catch (FaturaException | ParseException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -137,7 +138,7 @@ public class Estado implements Serializable {
     public CasaInteligente casaMaisGastou(){
         TreeSet<CasaInteligente> set_casas = new TreeSet<>();
 
-        this.housesConfig.values().stream()
+        this.casas.values().stream()
                         .forEach(a->set_casas.add(a.clone()));
 
         return set_casas.first();
@@ -153,7 +154,7 @@ public class Estado implements Serializable {
 
         };
         TreeSet<CasaInteligente> set_casas = new TreeSet<>(comp);
-        this.housesConfig.values().stream()
+        this.casas.values().stream()
                 .forEach(a->set_casas.add(a.clone()));
 
         return set_casas;
@@ -162,27 +163,33 @@ public class Estado implements Serializable {
     public TreeSet<Fatura> faturasFornecedor(Fornecedor forn) {
         TreeSet<Fatura> lista = new TreeSet<>();
 
-        this.housesConfig.values().stream().filter(a-> a.getFornecedor().getName().equals(forn.getName())).forEach(a -> {
+        this.casas.values().stream().filter(a-> a.getFornecedor().getName().equals(forn.getName())).forEach(a -> {
             try {
-                lista.add(a.faturaCasa(1).clone());
-            } catch (FaturaException e) {
+                lista.add(a.faturaCasa("19-10-2022","20-10-2022").clone());
+            } catch (FaturaException | ParseException e) {
                 throw new RuntimeException(e);
             }
         });
-
         return lista;
     }
 
-    public Fornecedor fornecedorMaisFaturou(){
+
+    public Fornecedor fornecedorMaisFaturou() {
         Fornecedor maior = null;
         double consumomaior=0;
-        double consumoforn=0;
+        double consumoforn;
+
         for(Fornecedor forn : this.fornecedores.values()){
-            consumoforn =faturasFornecedor(forn).stream().mapToDouble(Fatura::valor_fatura).sum();
+            consumoforn =faturasFornecedor(forn).stream().mapToDouble(a-> {
+                try {
+                    return a.valor_fatura();
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }).sum();
            if (consumomaior <  consumoforn) {
                consumomaior =  consumoforn;
-               maior = forn ;
-           }
+               maior = forn ;}
         }
         return maior;
     }

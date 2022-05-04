@@ -15,44 +15,36 @@ public class SmartCamera extends SmartDevice {
         super();
         this.resolution = new Resolution();
         this.file_size = 0;
-        this.compression = 0;
     }
 
     public SmartCamera(String id) {
         super(id);
         this.resolution = new Resolution();
         this.file_size = 0;
-        this.compression = 0;
     }
 
-    public SmartCamera(String id, boolean state, float custo, Resolution resolution, float file_size, float compression) throws SmartDeviceException, SmartCameraException, ResolutionException {
+    public SmartCamera(String id, boolean state, float custo, Resolution resolution, float file_size, float consumo) throws SmartDeviceException, SmartCameraException, ResolutionException {
         super(id,state,custo);
+        super.setConsumo(consumo);
 
         if (resolution.getHeight()<0 || resolution.getWidth()<0) throw new ResolutionException(id+ " Resolution : Valor(es) Negativo(s)");
         if (file_size<0 || compression<0) throw new SmartCameraException("Valores Negativos");
 
         this.resolution = resolution;
         this.file_size = file_size;
-        this.compression = compression;
-
-        float consumo = (float) Math.sqrt((double) this.resolution.getRes()*this.file_size) * this.compression/100;
-        super.setConsumo(consumo);
-
     }
 
     public SmartCamera(SmartCamera smt)  throws SmartDeviceException, SmartCameraException, ResolutionException {
         super(smt.getID(), smt.getOn(),smt.getCusto());
+        super.setConsumo(smt.getConsumo());
 
         if (smt.getResolution().getHeight()<0 || smt.getResolution().getWidth()<0) throw new ResolutionException(smt.getID()+" Resolution : Valor(es) Negativos");
-        if (file_size<0 || compression<0) throw new SmartCameraException("Valores Negativos");
+        if (smt.getFileSize()<0) throw new SmartCameraException(smt.getID() + "Valores Negativos");
 
         this.resolution = smt.getResolution();
         this.file_size = smt.getFileSize();
-        this.compression = smt.getCompression();
 
-        float consumo = (float) Math.sqrt((double)smt.getResolution().getRes()*smt.getFileSize()) * smt.getCompression()/100;
 
-        super.setConsumo(consumo);
     }
 
     public Resolution getResolution() {
@@ -61,7 +53,6 @@ public class SmartCamera extends SmartDevice {
 
     public float getFileSize() { return this.file_size; }
 
-    public float getCompression() {return this.compression;}
 
     public void setResolution(Resolution res) throws ResolutionException{
         if (resolution.getHeight()<0 || resolution.getWidth()<0) throw new ResolutionException(" Atribuição de Valor(es) Negativo de Resolução");
@@ -72,10 +63,6 @@ public class SmartCamera extends SmartDevice {
         if(file_size<0) throw new SmartCameraException(" Atribuição de Valor Negativo de Tamanho de Ficheiro");
         this.file_size = file_size; }
 
-    public void setCompression(float compression) throws SmartCameraException {
-        if(compression<0) throw new SmartCameraException(" Atribuição de Valor Negativo de Compressão");
-        this.compression = compression;
-    }
 
     public SmartCamera clone(){
         try {
@@ -92,15 +79,14 @@ public class SmartCamera extends SmartDevice {
         if (!(o instanceof SmartCamera)) return false;
         SmartCamera smt = (SmartCamera) o;
         return (this.resolution.equals(smt.getResolution()) &&
-                this.file_size==smt.getFileSize() &&
-                this.compression == smt.getCompression());
+                this.file_size==smt.getFileSize());
     }
 
     public String toString() {
         return super.toString() +
                 "\nType: SmartBulb" +
                 this.resolution +
-                "\nFile Size: " + this.file_size + "\n";
+                " | File Size: " + this.file_size;
     }
 }
 

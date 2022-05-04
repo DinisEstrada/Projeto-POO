@@ -36,7 +36,7 @@ public class SmartBulb extends SmartDevice {
         this.dimensao = dimensao;
         this.valor_fixo= valor_fixo;
 
-        super.setConsumo(this.valor_fixo+((float)(this.tone+0.05)*0.0005f));
+        super.setConsumo(this.valor_fixo+((float)(this.tone+0.5)*0.005f));
     }
 
     public SmartBulb(SmartBulb smt) throws SmartDeviceException,SmartBulbException{
@@ -52,7 +52,7 @@ public class SmartBulb extends SmartDevice {
         this.dimensao = smt.getDimensao();
         this.valor_fixo= smt.getValorFixo();
 
-        super.setConsumo(this.valor_fixo+((float)(this.tone+0.05)*0.0005f));
+        super.setConsumo(this.valor_fixo+((float)(this.tone+0.5)*0.005f));
     }
 
     public int getTone() {
@@ -102,9 +102,9 @@ public class SmartBulb extends SmartDevice {
     public String toString() {
         return super.toString() +
                 "\nType: SmartBulb" +
-                "\nTone: " + this.tone +
-                "\nDimensão: " + this.dimensao +
-                "\nValor Fixo: " + this.valor_fixo + "\n";
+                " | Tone: " + this.tone +
+                " | Dimensão: " + this.dimensao +
+                " | Valor Fixo: " + this.valor_fixo;
     }
 
 }

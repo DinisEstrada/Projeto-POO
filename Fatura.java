@@ -1,45 +1,61 @@
-import ErrorHandling.CasaInteligenteException;
-import ErrorHandling.FaturaException;
-import ErrorHandling.FornecedorException;
-import ErrorHandling.SmartDeviceException;
-
+import ErrorHandling.*;
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Fatura implements Comparable, Serializable {
 
+    SimpleDateFormat sdf
+            = new SimpleDateFormat(
+            "dd-MM-yyyy");
+
     private CasaInteligente casa;
-    private int periodo;
+
+    private String inicio_faturacao;
+    private String fim_faturacao;
+
     private float consumo;
     private float custo;
 
     public Fatura(){
         this.casa = new CasaInteligente();
-        this.periodo = 0;
+        this.inicio_faturacao = "";
+        this.fim_faturacao = "";
         this.consumo=0;
         this.custo=0;
     }
 
-    public Fatura(CasaInteligente casa, int periodo) throws FaturaException{
-        if(periodo<0) throw new FaturaException("Valor de dias negativo");
+    public Fatura(CasaInteligente casa, String inicio, String fim) throws FaturaException, ParseException {
+        if (perido_fat(inicio,fim)<0) throw new FaturaException("Data de ínicio posterior à Data de fim");
+
         this.casa = casa.clone();
-        this.periodo = periodo;
+        this.inicio_faturacao = inicio;
+        this.fim_faturacao = fim;
         this.consumo = consumoFatura();
         this.custo= valor_fatura();
     }
 
-    public Fatura(Fatura f) throws FaturaException {
-        if(f.getPeriodo()<0 || f.getConsumo()<0 || f.getCusto()<0) throw new FaturaException("Valor de dias negativo");
+    public Fatura(Fatura f) throws FaturaException, ParseException {
+        if (perido_fat(f.getInicio_faturacao(),f.getFim_faturacao())<0) throw new FaturaException("Data de ínicio posterior à Data de fim");
+        if(f.getConsumo()<0 || f.getCusto()<0) throw new FaturaException("Valor de dias negativo");
+
+        this.inicio_faturacao = f.getInicio_faturacao();
+        this.fim_faturacao = f.getFim_faturacao();
         this.casa = f.getCasa();
-        this.periodo = f.getPeriodo();
         this.consumo = f.getConsumo();
         this.custo = f.getCusto();
     }
 
     public CasaInteligente getCasa() {return this.casa.clone();}
 
-    public int getPeriodo() {
-        return this.periodo;}
+    public String getInicio_faturacao() {
+        return this.inicio_faturacao;
+    }
 
+    public String getFim_faturacao() {
+        return this.fim_faturacao;
+    }
     public float getConsumo() {
         return this.consumo;
     }
@@ -53,9 +69,12 @@ public class Fatura implements Comparable, Serializable {
         this.casa = casa.clone();
     }
 
-    public void setPeriodo(int dias) throws FaturaException{
-        if(dias<0) throw new FaturaException("Valor de dias Negativo");
-        this.periodo = dias;
+    public void setInicio_faturacao(String inicio_faturacao) {
+        this.inicio_faturacao = inicio_faturacao;
+    }
+
+    public void setFim_faturacao(String fim_faturacao) {
+        this.fim_faturacao = fim_faturacao;
     }
 
     public void setConsumo(float consumo) throws FaturaException {
@@ -71,18 +90,22 @@ public class Fatura implements Comparable, Serializable {
     public Fatura clone(){
         try {
             return new Fatura(this);
-        } catch (FaturaException e) {
+        } catch (FaturaException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
     public String toString(){
-        return "\n### Fatura ###"+
-                "\nCasa: " + this.casa.getOwner() +
-                "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
-                "\nPeríodo: " + this.periodo +
-                " dia(s)\nConsumo: " + this.consumo+
-                " kWh\nValor: " + this.custo+" €";
+        try {
+            return "\n###### Fatura ######"+
+                    "\nCasa: " + this.casa.getOwner() +
+                    "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
+                     "\nInicio: " + this.inicio_faturacao + " | Fim: " + this.fim_faturacao + " | Período: " + perido_fat(this.inicio_faturacao,this.fim_faturacao) +
+                    " dia(s)\nConsumo: " + this.consumo+
+                    " kWh\nValor: " + this.custo+" €";
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -91,7 +114,8 @@ public class Fatura implements Comparable, Serializable {
         if (o==null || this.getClass()!=o.getClass()) return false;
         Fatura ft = (Fatura) o;
         return (this.casa.equals(ft.getCasa()) &&
-                this.periodo == ft.getPeriodo() &&
+                this.inicio_faturacao == ft.getInicio_faturacao() &&
+                this.fim_faturacao == ft.getFim_faturacao() &&
                 this.getConsumo() == this.getConsumo() &&
                 this.getCusto() == ft.getCusto());
     }
@@ -126,13 +150,25 @@ public class Fatura implements Comparable, Serializable {
 
     //---------------------------------------------------
 
-    private float consumoFatura(){
-        return (float) casa.consumoCasa()*this.periodo;
+    private float consumoFatura() throws ParseException {
+        return (float) casa.consumoCasa()*perido_fat(this.inicio_faturacao, this.fim_faturacao);
     }
 
 
-    public float valor_fatura() {
+    public float valor_fatura() throws ParseException {
 
-        return (float) this.casa.custoCasa()*this.periodo;
+        return (float) this.casa.custoCasa()*perido_fat(this.inicio_faturacao, this.fim_faturacao);
+    }
+
+
+    public long difTime(String inicio, String fim) throws ParseException {
+        Date d1 = sdf.parse(inicio);
+        Date d2 = sdf.parse(fim);
+        return d2.getTime() - d1.getTime() ;
+    }
+
+    public long perido_fat(String inicio, String fim) throws ParseException {
+
+        return (difTime(inicio,fim) / (1000 * 60 * 60 * 24)) % 365;
     }
 }

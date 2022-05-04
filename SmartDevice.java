@@ -93,11 +93,11 @@ public class SmartDevice implements Serializable {
     }
 
     public String toString() {
-        return  "\n### SmartDevice ###" +
+        return  "\n\n### SmartDevice ###" +
                 "\nID: " + this.id +
-                "\nLigado: " + this.on +
-                "\nCusto de Instalação: " + this.custo_inst +
-                "\nConsumo Diário: " + this.consumo_diario;
+                " | Ligado: " + this.on +
+                " | Custo de Instalação: " + this.custo_inst +
+                " | Consumo Diário: " + this.consumo_diario;
     }
 
     public void guardaSmartDevice(String nomeFicheiro) throws FileNotFoundException, IOException{

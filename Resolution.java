@@ -46,7 +46,7 @@ public class Resolution implements Serializable {
     public Resolution clone(){return new Resolution(this);}
 
     public String toString() {
-        return "\nResolution: " + this.width + " x " + this.height;
+        return " | Resolution: " + this.width + " x " + this.height;
     }
 
     public boolean equals(Object o) {
