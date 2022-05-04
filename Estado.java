@@ -1,4 +1,7 @@
+import ErrorHandling.CasaInteligenteException;
+import ErrorHandling.EstadoException;
 import ErrorHandling.FaturaException;
+import ErrorHandling.FornecedorException;
 
 import java.io.*;
 import java.text.ParseException;
@@ -87,9 +90,9 @@ public class Estado implements Serializable {
     public void removeCasa(CasaInteligente casa){
         this.casas.remove(casa.getOwner());
     }
-    public void adicionaFornecedor(Fornecedor fornecedor){
-        if(!fornecedores.containsKey(fornecedor.getName()))
-            this.fornecedores.put(fornecedor.getName(),fornecedor);
+    public void adicionaFornecedor(Fornecedor fornecedor) throws EstadoException {
+        if(fornecedores.containsKey(fornecedor.getName())) throw new EstadoException("Fornecedor já existe");
+        else this.fornecedores.put(fornecedor.getName(),fornecedor);
     }
 
     public void removeFornecedor(Fornecedor fornecedor){
@@ -193,5 +196,95 @@ public class Estado implements Serializable {
         }
         return maior;
     }
+
+    // MUDANÇAS
+    //  - casa muda de fornecedor
+    //  - ligar e desligar dispositivos
+    //  - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
+
+    public void mudaFornecedor(CasaInteligente casa, String forn) throws EstadoException {
+        if (!this.fornecedores.containsKey(forn)) throw new EstadoException("Fornecedor não listado");
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        Fornecedor fornecedor = null;
+        for(Fornecedor f : this.fornecedores.values()){
+            if(f.getName().equals(forn)) fornecedor = f;
+        }
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+
+        casa_upd.setFornecedor(fornecedor);
+
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+
+    }
+
+    public void turnDeviceON(CasaInteligente casa, String id) throws EstadoException, CasaInteligenteException {
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        casa_upd.turnDeviceOn(id);
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+    }
+
+    public void turnDeviceOFF(CasaInteligente casa, String id) throws EstadoException, CasaInteligenteException {
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        casa_upd.turnDeviceOFF(id);
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+    }
+
+    public void turnALLON(CasaInteligente casa) throws EstadoException, CasaInteligenteException {
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        casa_upd.turnAllOn();
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+    }
+
+    public void turnALLOFF(CasaInteligente casa) throws EstadoException, CasaInteligenteException {
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        casa_upd.turnAllOff();
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+    }
+
+    public void turnRoomOFF(CasaInteligente casa, String room) throws EstadoException, CasaInteligenteException {
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        casa_upd.turnRoomOff(room);
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+    }
+
+    public void turnRoomOn(CasaInteligente casa, String room) throws EstadoException, CasaInteligenteException {
+        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+
+        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        casa_upd.turnRoomOn(room);
+        this.casas.replace(casa_upd.getOwner(), casa_upd);
+    }
+
+/*Ainda nao esta certo
+    public void mudaValoresForn(String fornecedor, float valor_energia, float imposto, float desconto) throws EstadoException, CasaInteligenteException, FornecedorException {
+        if (!this.fornecedores.containsKey(fornecedor)) throw new EstadoException("Casa não existe");
+
+        Fornecedor f_upd = this.fornecedores.get(fornecedor).clone();
+
+        f_upd.setValor_base(valor_energia);
+        f_upd.setImposto(imposto);
+        f_upd.setDesconto(desconto);
+
+        this.fornecedores.replace(f_upd.getName(), f_upd);
+
+        for(CasaInteligente casa : this.casas.values()){
+            if(casa.getFornecedor().getName().equals(fornecedor)) {
+                casa.setFornecedor(f_upd);
+                this.casas.replace(casa.getOwner(), casa);
+            }
+        }
+    }
+    */
 
 }
