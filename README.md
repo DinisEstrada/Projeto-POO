@@ -79,4 +79,4 @@ Também se consegue controlar o input de valores não válidos, assim como, asse
 - [Extra] Verificar se esta tudo por composição. 
 
 //COISAS A CORRIGIR
-quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices (zé-done)
+- quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices (zé-DONE)
