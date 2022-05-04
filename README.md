@@ -53,30 +53,30 @@ Também se consegue controlar o input de valores não válidos, assim como, asse
 
 
 Tarefas já feitas:
--> Criar classe smartdevice e as suas subclasses (Zé)
--> Criar a classe casa Inteligente (Zé)
--> Arranjar forma de criar fornecedores (Zé)
--> Parser do ficheiro e criação automática da configuração de casas e smartdevices (Zé)
--> Error Handling e como Guardar informação num ficheiro (Zé)
--> tirar faturas por cada casa (prov criar classe fatura) (Zé)
--> Criar uma classe estado com todas as casas e fornecedores e as suas configurações (Zé)
--> fazer metodos de estatisticas (Zé)
-  - casa que gastou mais
-  - fornecedor com maior volume de faturação
-  - todas as faturas por fornecedor
-  - casas com maior consumo durante X tempo
+- Criar classe smartdevice e as suas subclasses (Zé)
+- Criar a classe casa Inteligente (Zé)
+- Arranjar forma de criar fornecedores (Zé)
+- Parser do ficheiro e criação automática da configuração de casas e smartdevices (Zé)
+- Error Handling e como Guardar informação num ficheiro (Zé)
+- tirar faturas por cada casa (prov criar classe fatura) (Zé)
+- Criar uma classe estado com todas as casas e fornecedores e as suas configurações (Zé)
+- fazer metodos de estatisticas (Zé)
+  -- casa que gastou mais
+  -- fornecedor com maior volume de faturação
+  -- todas as faturas por fornecedor
+  -- casas com maior consumo durante X tempo
 
 Tarefas por fazer:
--> MENU e SUBMENUS (DINIS)
--> executar uma simulação (calculo do consumo na evolução temporal de um estado)
--> Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte)
-  - mudar de fornecedor
-  - ligar e desligar dispositivos
-  - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
--> Automatizar as mudanças com um parser de informação
+- MENU e SUBMENUS (DINIS)
+- executar uma simulação (calculo do consumo na evolução temporal de um estado)
+- Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte)
+  -- mudar de fornecedor
+  -- ligar e desligar dispositivos
+  -- mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
+- Automatizar as mudanças com um parser de informação
   - ideia: pede-se o periodo de faturação e entre ele criar mini faturas entre cada mudança de estado. guarda-se as mini faturas e depois somam-se todas.
--> [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
--> [Extra] Verificar se esta tudo por composição. 
+- [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
+- [Extra] Verificar se esta tudo por composição. 
 
 //COISAS A CORRIGIR
 quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices (zé-done)
