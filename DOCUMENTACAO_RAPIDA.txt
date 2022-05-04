@@ -65,8 +65,6 @@ Tarefas já feitas:
   - casas com maior consumo durante X tempo
 
 Tarefas por fazer:
--> Criar testes Casa-SmartDevice-Fornecedor- /*Extra para automatizar processo de testagem*/
--> Verificar se esta tudo por composição.
 -> MENU e SUBMENUS (DINIS)
 -> executar uma simulação (calculo do consumo na evolução temporal de um estado)
 -> Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte)
@@ -74,7 +72,9 @@ Tarefas por fazer:
   - ligar e desligar dispositivos
   - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
 -> Automatizar as mudanças com um parser de informação
-
+  - ideia: pede-se o periodo de faturação e entre ele criar mini faturas entre cada mudança de estado. guarda-se as mini faturas e depois somam-se todas.
+-> [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
+-> [Extra] Verificar se esta tudo por composição. 
 
 //COISAS A CORRIGIR
-quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices
+quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices (zé-done)
