@@ -66,6 +66,7 @@ Também se consegue controlar o input de valores não válidos, assim como, asse
   - todas as faturas por fornecedor
   - casas com maior consumo durante X tempo
 - Permitir mudanças durante a simulação (todas as alterações refletem na fatura seguinte) (zé)
+  *__Comentario__: isto é uma combinação dos menus com a mudança de estado. a mudança do estado já está implementada - falta adicionar a interface disto*
   - mudar de fornecedor
   - ligar e desligar dispositivos
   - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
