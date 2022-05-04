@@ -20,6 +20,7 @@ Depois cada subclasse adiciona as v.i. especificas
 ### Fornecedor 
 É uma classe abstrata que constroi 3 tipos de fornecedores(A/B e C). Usei classe abstrata pois o metodo formulaPreco tem formula diferente em cada Fornecedor.
 V.I. sao as variaveis da formula
+-nome
 -valor_base
 -imposto
 -desconto
@@ -27,12 +28,11 @@ V.I. sao as variaveis da formula
 clone e tostring tambem são abstratos para funcionarem direito.
 
 ### Parser
-Objetivo é receber um config.txt e construir tudo de forma automática. A estrutura do config pode ser vista vendo os padroes do config.txt.
+Objetivo é receber um logs.csv e construir tudo de forma automática. A estrutura do config pode ser vista nos avisos da bb
 V.I. é o ficheiro.
 metodos importantes:
  - houseConfig: gera um hashmap de todas as casas inteligentes. Key= nome da casa dada no ficheiro |-> CasaInteligente
  - energyConfig : gera um hashmap de todos os fornecedores e as suas casas. Key= nomedacasa |->  Fornecedor
- - speakerConfig : gera um hashmap das marcas e dos custos.  Key= marca |-> custo (necessário pq o consumo do speaker depende da marca)
 
 ### Package Error Handling 
 Tem todas as subclasses que extendem Exception de modo a mandar mensagens de erro com alguma granularidade.
