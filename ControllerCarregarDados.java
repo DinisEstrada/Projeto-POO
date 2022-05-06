@@ -8,7 +8,7 @@ public class ControllerCarregarDados {
         public static void run(Estado estado) {
             
             boolean exit = false;
-            boolean errorMessage = false;
+            //boolean errorMessage = false;
             while(!exit){
                 int opcao = -1;
                 while(opcao < 0 || opcao > 7) {
@@ -26,29 +26,49 @@ public class ControllerCarregarDados {
                             Menu.clearWindow();
                         }
                         else {
-                            CasaInteligente casa = Menu.MenuCriarCasa(estado);    
-                            Menu.escolherFornecedor(estado, casa);
-                            estado.adicionaCasa(casa);
+                            boolean i;
+                            do {
+                                CasaInteligente casa = Menu.MenuCriarCasa(estado);    
+                                Menu.escolherFornecedor(estado, casa);
+                                try {estado.adicionaCasa(casa); i=false;}
+                                catch(EstadoException e) {System.out.println(e + "\n"); i=true;}
+                            } while(i);
                         }
                         break;
 
                     case 2:
                         
-                        AbstractMap.SimpleEntry<String, String> dados = Menu.menuDispositivo();
-                        
+
+                    if (!estado.getCasas().isEmpty()) {
+                        AbstractMap.SimpleEntry<String, String> dados = Menu.menuDispositivo(estado);
+
                         if(estado.getCasas().containsKey(dados.getKey()) && estado.getCasas().get(dados.getKey()).hasRoom(dados.getValue())) {
+                            
+                            CasaInteligente casa = estado.getCasas().get(dados.getKey());
+                            String room = dados.getValue();
+
                             DeviceType devicetype = null;
+                            boolean i;
+
                             while(devicetype == null) devicetype = Menu.menuDispositivo2();
-                        
+                            
                             if(devicetype.equals(DeviceType.SmartBulb)) {
-                                SmartBulb bulb = Menu.menuSmartBulb();
-                                
+                                do {
+                                    try {SmartBulb bulb = Menu.menuSmartBulb(); casa.addDevice(bulb,room); i=false;}
+                                    catch (CasaInteligenteException e) {System.out.print(e + "\n"); i=true;}
+                                } while(i);
                             }
                             else if (devicetype.equals(DeviceType.SmartCamera)) {
-                                SmartCamera camera = Menu.menuSmartCamera();
+                                do {
+                                    try {SmartCamera camera = Menu.menuSmartCamera(); casa.addDevice(camera,room); i=false;}
+                                    catch (CasaInteligenteException e) {System.out.print(e + "\n"); i=true;}
+                                } while(i); 
                             }
                             else {
-                                SmartSpeaker speaker = Menu.menuSmartSpeaker();
+                                do {
+                                    try {SmartSpeaker speaker = Menu.menuSmartSpeaker(); casa.addDevice(speaker,room); i=false;}
+                                    catch (CasaInteligenteException e) {System.out.print(e + "\n"); i=true;}
+                                } while(i); 
                             }
                         }
 
@@ -57,6 +77,13 @@ public class ControllerCarregarDados {
                             Menu.pressEnter();
                             Menu.clearWindow();
                         }
+                    }
+
+                    else {
+                        System.out.println("\nNão existem casas");
+                        Menu.pressEnter();
+                        Menu.clearWindow();
+                    }
                         
                         break;
                     
@@ -65,12 +92,35 @@ public class ControllerCarregarDados {
                         break;
                     
                     case 4:
-                        try {estado = Estado.carregaEstado("logs.csv");}
-                        catch (FileNotFoundException e) {System.out.print(e + "\n");}
-                        catch (IOException e) {System.out.print(e + "\n");}
-                        catch (ClassNotFoundException e) {System.out.print(e + "\n");}
-                        Menu.pressEnter();
                         
+                        Parser file = new Parser("logs.csv");
+                        HashMap<String,CasaInteligente> house;
+                        HashMap<String,Fornecedor> fornecedor;
+                        
+                        try {
+                            house = file.housesConfig();
+                            for(String name: house.keySet()) {
+                                CasaInteligente casa = house.get(name);
+                                try {estado.adicionaCasa(casa);}
+                                catch (EstadoException e) {System.out.print(e + "\n");}
+                            }
+                        }
+                        catch(CasaInteligenteException | SmartDeviceException | FornecedorException | SmartBulbException | 
+                            ResolutionException | SmartCameraException | 
+                            SmartSpeakerException | FileNotFoundException e) {System.out.print(e + "\n");}
+
+                        try {
+                            fornecedor = file.energyConfig();
+                            for(String forn: fornecedor.keySet()) {
+                                Fornecedor forns = fornecedor.get(forn);
+                                try {estado.adicionaFornecedor(forns);}
+                                catch (EstadoException e) {System.out.print(e + "\n");}
+                            }
+                        }
+                        catch(FileNotFoundException | FornecedorException e) {System.out.print(e + "\n");}
+     
+                        Menu.pressEnter();
+
                         break;
                     
                     case 0:

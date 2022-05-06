@@ -98,7 +98,7 @@ public class Fatura implements Comparable, Serializable {
     public String toString(){
         try {
             return "\n###### Fatura ######"+
-                    "\nCasa: " + this.casa.getOwner() +
+                    "\nCasa: " + this.casa.getID() +
                     "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
                      "\nInicio: " + this.inicio_faturacao + " | Fim: " + this.fim_faturacao + " | Período: " + perido_fat(this.inicio_faturacao,this.fim_faturacao) +
                     " dia(s)\nConsumo: " + this.consumo+
@@ -126,7 +126,7 @@ public class Fatura implements Comparable, Serializable {
         if (ft.getCusto()>this.custo) return 1;
         else if (ft.getCusto()<this.custo) return -1;
         else {
-           return ft.getCasa().getOwner().compareTo( this.casa.getOwner());
+           return ft.getCasa().getID().compareTo( this.casa.getID());
         }
     }
 

@@ -84,11 +84,12 @@ public class Estado implements Serializable {
     //---------------------------------------------------------------------
 
 
-    public void adicionaCasa(CasaInteligente casa){
-        this.casas.put(casa.getOwner(),casa);
+    public void adicionaCasa(CasaInteligente casa) throws EstadoException {
+        if(casas.containsKey(casa.getID())) throw new EstadoException("Casa já existente");
+        this.casas.put(casa.getID(),casa);
     }
     public void removeCasa(CasaInteligente casa){
-        this.casas.remove(casa.getOwner());
+        this.casas.remove(casa.getID());
     }
     public void adicionaFornecedor(Fornecedor fornecedor) throws EstadoException {
         if(fornecedores.containsKey(fornecedor.getName())) throw new EstadoException("Fornecedor já existe");
@@ -122,7 +123,7 @@ public class Estado implements Serializable {
 
         this.casas.values().stream().forEach(casa -> {
             try {
-                fats.put(casa.getOwner(), casa.faturaCasa(inicio,fim));
+                fats.put(casa.getID(), casa.faturaCasa(inicio,fim)); //ver isto
             } catch (FaturaException | ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -152,7 +153,7 @@ public class Estado implements Serializable {
             if (o1.consumoCasa()*periodo  < o2.consumoCasa()*periodo ) return 1;
             else if (o1.consumoCasa()*periodo > o2.consumoCasa()*periodo) return -1;
             else {
-                return o1.getOwner().compareTo(o2.getOwner());
+                return o1.getID().compareTo(o2.getID()); // ver isto
             }
 
         };
@@ -204,66 +205,66 @@ public class Estado implements Serializable {
 
     public void mudaFornecedor(CasaInteligente casa, String forn) throws EstadoException {
         if (!this.fornecedores.containsKey(forn)) throw new EstadoException("Fornecedor não listado");
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
         Fornecedor fornecedor = null;
         for(Fornecedor f : this.fornecedores.values()){
             if(f.getName().equals(forn)) fornecedor = f;
         }
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
 
         casa_upd.setFornecedor(fornecedor);
 
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
 
     }
 
     public void turnDeviceON(CasaInteligente casa, String id) throws EstadoException, CasaInteligenteException {
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
         casa_upd.turnDeviceOn(id);
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
     public void turnDeviceOFF(CasaInteligente casa, String id) throws EstadoException, CasaInteligenteException {
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
         casa_upd.turnDeviceOFF(id);
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
     public void turnALLON(CasaInteligente casa) throws EstadoException, CasaInteligenteException {
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
         casa_upd.turnAllOn();
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
     public void turnALLOFF(CasaInteligente casa) throws EstadoException, CasaInteligenteException {
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
         casa_upd.turnAllOff();
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
     public void turnRoomOFF(CasaInteligente casa, String room) throws EstadoException, CasaInteligenteException {
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
         casa_upd.turnRoomOff(room);
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
     public void turnRoomOn(CasaInteligente casa, String room) throws EstadoException, CasaInteligenteException {
-        if (!this.casas.containsKey(casa.getOwner())) throw new EstadoException("Casa não existe");
+        if (!this.casas.containsKey(casa.getID())) throw new EstadoException("Casa não existe");
 
-        CasaInteligente casa_upd = this.casas.get(casa.getOwner()).clone();
+        CasaInteligente casa_upd = this.casas.get(casa.getID()).clone();
         casa_upd.turnRoomOn(room);
-        this.casas.replace(casa_upd.getOwner(), casa_upd);
+        this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
 /*Ainda nao esta certo
@@ -281,7 +282,7 @@ public class Estado implements Serializable {
         for(CasaInteligente casa : this.casas.values()){
             if(casa.getFornecedor().getName().equals(fornecedor)) {
                 casa.setFornecedor(f_upd);
-                this.casas.replace(casa.getOwner(), casa);
+                this.casas.replace(casa.getID(), casa);
             }
         }
     }

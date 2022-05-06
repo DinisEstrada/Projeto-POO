@@ -104,7 +104,7 @@ public class Parser {
 
                     //cont ++;
                     casaMaisRecente = createCasa(linhaPartida[1], fornecedores);
-                    lista_casas.put(casaMaisRecente.getOwner(), casaMaisRecente);
+                    lista_casas.put(casaMaisRecente.getID(), casaMaisRecente);
                 }
                 case "Divisao" -> {
                     if (casaMaisRecente == null) throw new CasaInteligenteException("Casa Não Identificada");
@@ -196,9 +196,16 @@ public class Parser {
         String nome = campos[0];
         int nif = Integer.parseInt(campos[1]);
         Fornecedor fornecedor = forns.get(campos[2]);
+
+        Random num = new Random();
+        StringBuilder houseid = new StringBuilder();
+        int rand_num = num.nextInt(999999);
+        houseid.append(nome + "-").append(rand_num);
+        String id = houseid.toString();
+        
         if (fornecedor == null) throw new CasaInteligenteException("Fornecedor não listado");
 
-        return new CasaInteligente(nome, nif,fornecedor);
+        return new CasaInteligente(id,nome, nif,fornecedor);
     }
 
     public HashMap<String,Fornecedor> energyConfig() throws FileNotFoundException, FornecedorException {
