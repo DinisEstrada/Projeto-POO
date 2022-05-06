@@ -84,7 +84,7 @@ public class SmartCamera extends SmartDevice {
 
     public String toString() {
         return super.toString() +
-                "\nType: SmartBulb" +
+                "\nType: SmartCamera" +
                 this.resolution +
                 " | File Size: " + this.file_size;
     }

@@ -134,7 +134,7 @@ public class CasaInteligente implements Serializable, Comparable {
                 this.devices.equals(casa.getDevices()) &&
                 this.locations.equals(casa.getLocations()));
     }
-
+    
     public String toString(){
         return  "\n### House ###" +
                 "\nOwner: " + this.owner +

@@ -5,8 +5,9 @@ import java.io.*;
 public class Controller {
     public static void run() {
         
-
+        Estado estado = new Estado();
         boolean errorMessage = false;
+        
         while(true){
             int opcao = -1;
             while(opcao < 0 || opcao > 7) {
@@ -20,11 +21,11 @@ public class Controller {
                     break;
                     
                 case 2:
-                    ControllerCarregarDados.run();
+                    ControllerCarregarDados.run(estado);
                     break;
                     
                 case 3:
-                    System.exit(0);
+                    
                     break;
                 case 0:
                     System.exit(0);

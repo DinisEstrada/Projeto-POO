@@ -37,19 +37,25 @@ public class Estado implements Serializable {
 
 
     public HashMap<String, CasaInteligente> getCasas() {
-        HashMap<String,CasaInteligente> casas = new HashMap<>();
-        for(Map.Entry<String,CasaInteligente> ent : this.casas.entrySet()){
-            casas.put(ent.getKey(),ent.getValue().clone());
+        if(this.casas == null) return null;
+        else {
+            HashMap<String,CasaInteligente> casas = new HashMap<>();
+            for(Map.Entry<String,CasaInteligente> ent : this.casas.entrySet()){
+                casas.put(ent.getKey(),ent.getValue().clone());
+            }
+            return casas;
         }
-        return casas;
     }
 
     public HashMap<String, Fornecedor> getFornecedores() {
-        HashMap<String,Fornecedor> forns = new HashMap<>();
-        for(Map.Entry<String,Fornecedor> ent : this.fornecedores.entrySet()){
-            forns.put(ent.getKey(),ent.getValue().clone());
+        if(this.fornecedores == null) return null;
+        else {
+            HashMap<String,Fornecedor> forns = new HashMap<>();
+            for(Map.Entry<String,Fornecedor> ent : this.fornecedores.entrySet()){
+                forns.put(ent.getKey(),ent.getValue().clone());
+            }
+            return forns;
         }
-        return forns;
     }
 
     public void setFornecedores(HashMap<String, Fornecedor> fornecedores) {
@@ -65,6 +71,7 @@ public class Estado implements Serializable {
             this.casas.put(ent.getKey(),ent.getValue().clone());
         }
     }
+
 
     public boolean equals(Object obj) {
         if(obj == this) return true;
@@ -82,8 +89,8 @@ public class Estado implements Serializable {
     }
 
     //---------------------------------------------------------------------
-
-
+    
+    
     public void adicionaCasa(CasaInteligente casa){
         this.casas.put(casa.getOwner(),casa);
     }

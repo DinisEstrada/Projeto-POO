@@ -8,7 +8,6 @@ public class SmartSpeaker extends SmartDevice {
     private int volume;
     private String channel;
     private String brand;
-
     private float brand_comsuption;
 
     public SmartSpeaker() {

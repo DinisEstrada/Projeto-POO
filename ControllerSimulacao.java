@@ -1,12 +1,15 @@
 import java.util.*;
+
+import ErrorHandling.SmartBulbException;
+
 import java.io.*;
 
-public class ControllerDispositivo {
+public class ControllerSimulacao {
         public static void run() {
             
-    
+            boolean exit = false;
             boolean errorMessage = false;
-            while(true){
+            while(!exit){
                 int opcao = -1;
                 while(opcao < 0 || opcao > 7) {
                     opcao = Menu.MenuCarregarEstado();
@@ -20,14 +23,19 @@ public class ControllerDispositivo {
                         
                     case 2:
 
-
-                        break;
                         
-                    case 3:
-                        System.exit(0);
                         break;
+
+                    case 3:
+                        
+                        break;
+                    
+                    case 4:
+
+                    
                     case 0:
-                        System.exit(0);
+                        exit = true;
+                        Menu.clearWindow();
                         break;
                         
                 }

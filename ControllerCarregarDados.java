@@ -1,11 +1,11 @@
 import java.util.*;
-
-import ErrorHandling.SmartBulbException;
+import java.text.ParseException;
+import ErrorHandling.*;
 
 import java.io.*;
 
 public class ControllerCarregarDados {
-        public static void run() {
+        public static void run(Estado estado) {
             
             boolean exit = false;
             boolean errorMessage = false;
@@ -18,14 +18,25 @@ public class ControllerCarregarDados {
                 switch(opcao) {
                     
                     case 1:
-                        CasaInteligente casa = Menu.MenuCriarCasa();
-                        break;
+                        HashMap<String, Fornecedor> fornecedores = estado.getFornecedores();
                         
+                        if(fornecedores.isEmpty()) {
+                            System.out.println("Não existem fornecedores disponiveis");
+                            Menu.pressEnter();
+                            Menu.clearWindow();
+                        }
+                        else {
+                            CasaInteligente casa = Menu.MenuCriarCasa(estado);    
+                            Menu.escolherFornecedor(estado, casa);
+                            estado.adicionaCasa(casa);
+                        }
+                        break;
+
                     case 2:
                         
                         AbstractMap.SimpleEntry<String, String> dados = Menu.menuDispositivo();
                         
-                            
+                        if(estado.getCasas().containsKey(dados.getKey()) && estado.getCasas().get(dados.getKey()).hasRoom(dados.getValue())) {
                             DeviceType devicetype = null;
                             while(devicetype == null) devicetype = Menu.menuDispositivo2();
                         
@@ -39,12 +50,29 @@ public class ControllerCarregarDados {
                             else {
                                 SmartSpeaker speaker = Menu.menuSmartSpeaker();
                             }
+                        }
+
+                        else {
+                            System.out.println("\nAs informações sobre a casa e/ou a sala são inválidas");
+                            Menu.pressEnter();
+                            Menu.clearWindow();
+                        }
                         
                         break;
-                        
+                    
                     case 3:
-                        System.exit(0);
+                        Menu.menuCriaFornecedor(estado);    
                         break;
+                    
+                    case 4:
+                        try {estado = Estado.carregaEstado("logs.csv");}
+                        catch (FileNotFoundException e) {System.out.print(e + "\n");}
+                        catch (IOException e) {System.out.print(e + "\n");}
+                        catch (ClassNotFoundException e) {System.out.print(e + "\n");}
+                        Menu.pressEnter();
+                        
+                        break;
+                    
                     case 0:
                         exit = true;
                         Menu.clearWindow();
