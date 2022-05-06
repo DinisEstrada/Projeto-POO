@@ -139,7 +139,7 @@ public class Fatura implements Comparable, Serializable {
         fos.close();
     }
 
-    public Fatura carregaFatura(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static Fatura carregaFatura(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         Fatura c = (Fatura) oos.readObject();

@@ -134,7 +134,7 @@ public class CasaInteligente implements Serializable, Comparable {
                 this.devices.equals(casa.getDevices()) &&
                 this.locations.equals(casa.getLocations()));
     }
-    
+
     public String toString(){
         return  "\n### House ###" +
                 "\nOwner: " + this.owner +
@@ -160,7 +160,7 @@ public class CasaInteligente implements Serializable, Comparable {
         fos.close();
     }
 
-    public CasaInteligente carregaCasa(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static CasaInteligente carregaCasa(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         CasaInteligente c = (CasaInteligente) oos.readObject();

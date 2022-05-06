@@ -37,25 +37,19 @@ public class Estado implements Serializable {
 
 
     public HashMap<String, CasaInteligente> getCasas() {
-        if(this.casas == null) return null;
-        else {
-            HashMap<String,CasaInteligente> casas = new HashMap<>();
-            for(Map.Entry<String,CasaInteligente> ent : this.casas.entrySet()){
-                casas.put(ent.getKey(),ent.getValue().clone());
-            }
-            return casas;
+        HashMap<String,CasaInteligente> casas = new HashMap<>();
+        for(Map.Entry<String,CasaInteligente> ent : this.casas.entrySet()){
+            casas.put(ent.getKey(),ent.getValue().clone());
         }
+        return casas;
     }
 
     public HashMap<String, Fornecedor> getFornecedores() {
-        if(this.fornecedores == null) return null;
-        else {
-            HashMap<String,Fornecedor> forns = new HashMap<>();
-            for(Map.Entry<String,Fornecedor> ent : this.fornecedores.entrySet()){
-                forns.put(ent.getKey(),ent.getValue().clone());
-            }
-            return forns;
+        HashMap<String,Fornecedor> forns = new HashMap<>();
+        for(Map.Entry<String,Fornecedor> ent : this.fornecedores.entrySet()){
+            forns.put(ent.getKey(),ent.getValue().clone());
         }
+        return forns;
     }
 
     public void setFornecedores(HashMap<String, Fornecedor> fornecedores) {
@@ -71,7 +65,6 @@ public class Estado implements Serializable {
             this.casas.put(ent.getKey(),ent.getValue().clone());
         }
     }
-
 
     public boolean equals(Object obj) {
         if(obj == this) return true;
@@ -89,8 +82,8 @@ public class Estado implements Serializable {
     }
 
     //---------------------------------------------------------------------
-    
-    
+
+
     public void adicionaCasa(CasaInteligente casa){
         this.casas.put(casa.getOwner(),casa);
     }
@@ -115,7 +108,7 @@ public class Estado implements Serializable {
         fos.close();
     }
 
-    public Estado carregaEstado(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static Estado carregaEstado(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         Estado c = (Estado) oos.readObject();

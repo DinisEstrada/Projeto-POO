@@ -66,7 +66,7 @@ public class Resolution implements Serializable {
         fos.close();
     }
 
-    public Resolution carregaResolution(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static Resolution carregaResolution(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         Resolution c = (Resolution) oos.readObject();

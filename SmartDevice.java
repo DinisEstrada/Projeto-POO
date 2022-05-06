@@ -109,7 +109,7 @@ public class SmartDevice implements Serializable {
         fos.close();
     }
 
-    public SmartDevice carregaSmartDevice(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static SmartDevice carregaSmartDevice(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         SmartDevice c = (SmartDevice) oos.readObject();

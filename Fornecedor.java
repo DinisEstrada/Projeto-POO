@@ -91,7 +91,7 @@ abstract class Fornecedor implements Serializable {
         fos.close();
     }
 
-    public Fornecedor carregaFornecedor(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static Fornecedor carregaFornecedor(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
         FileInputStream fos = new FileInputStream(nomeFicheiro);
         ObjectInputStream oos = new ObjectInputStream(fos);
         Fornecedor f = (Fornecedor) oos.readObject();
