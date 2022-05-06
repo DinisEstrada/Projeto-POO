@@ -8,7 +8,6 @@ public class SmartCamera extends SmartDevice {
 
     private Resolution resolution;
     private float file_size;
-    private float compression;
 
 
     public SmartCamera() {
@@ -28,7 +27,7 @@ public class SmartCamera extends SmartDevice {
         super.setConsumo(consumo);
 
         if (resolution.getHeight()<0 || resolution.getWidth()<0) throw new ResolutionException(id+ " Resolution : Valor(es) Negativo(s)");
-        if (file_size<0 || compression<0) throw new SmartCameraException("Valores Negativos");
+        if (file_size<0) throw new SmartCameraException(" Valores Negativos");
 
         this.resolution = resolution;
         this.file_size = file_size;
@@ -84,7 +83,7 @@ public class SmartCamera extends SmartDevice {
 
     public String toString() {
         return super.toString() +
-                "\nType: SmartCamera" +
+                "\nType: SmartBulb" +
                 this.resolution +
                 " | File Size: " + this.file_size;
     }
