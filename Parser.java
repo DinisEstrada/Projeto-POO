@@ -205,7 +205,7 @@ public class Parser {
         
         if (fornecedor == null) throw new CasaInteligenteException("Fornecedor não listado");
 
-        return new CasaInteligente(id,nome, nif,fornecedor);
+        return new CasaInteligente(id, nome, nif,fornecedor);
     }
 
     public HashMap<String,Fornecedor> energyConfig() throws FileNotFoundException, FornecedorException {

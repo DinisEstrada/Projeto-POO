@@ -14,6 +14,7 @@ import java.util.*;
  */
 public class CasaInteligente implements Serializable, Comparable {
 
+    private String id;
     private String owner;
     private int nif;
 
@@ -26,6 +27,7 @@ public class CasaInteligente implements Serializable, Comparable {
      */
     public CasaInteligente() {
         // initialise instance variables
+        this.id = "";
         this.owner = "";
         this.nif = 0;
         this.fornecedor = null;
@@ -33,9 +35,10 @@ public class CasaInteligente implements Serializable, Comparable {
         this.locations = new HashMap<>();
     }
 
-    public CasaInteligente(String owner, int nif, Fornecedor fornecedor, Map<String,SmartDevice> ndevices, Map<String, List<String>> nlocations ) throws CasaInteligenteException {
+    public CasaInteligente(String id, String owner, int nif, Fornecedor fornecedor, Map<String,SmartDevice> ndevices, Map<String, List<String>> nlocations ) throws CasaInteligenteException {
         if(owner.equals("") || nif<0) throw new CasaInteligenteException("Informação do Dono Errada");
 
+        this.id = id;
         this.owner = owner;
         this.nif = nif;
         this.fornecedor = fornecedor.clone();
@@ -51,9 +54,10 @@ public class CasaInteligente implements Serializable, Comparable {
         }
     }
 
-    public CasaInteligente(String owner,int nif, Fornecedor fornecedor) throws CasaInteligenteException {
+    public CasaInteligente(String id, String owner,int nif, Fornecedor fornecedor) throws CasaInteligenteException {
         if(owner.equals("") || nif<0) throw new CasaInteligenteException("Informação do Dono Errada");
 
+        this.id = id;
         this.owner = owner;
         this.nif = nif;
         this.fornecedor = fornecedor.clone();
@@ -64,6 +68,7 @@ public class CasaInteligente implements Serializable, Comparable {
     public CasaInteligente(CasaInteligente casa) throws CasaInteligenteException {
         if(casa.getOwner().equals("") || casa.getNif()<0) throw new CasaInteligenteException("Informação do Dono Errada");
 
+        this.id = casa.getID();
         this.owner = casa.getOwner();
         this.nif = casa.getNif();
         this.fornecedor = casa.getFornecedor();
@@ -71,6 +76,8 @@ public class CasaInteligente implements Serializable, Comparable {
         this.locations = casa.getLocations();
 
     }
+
+    public String getID() {return this.id;}
 
     public String getOwner() {return this.owner;}
 
@@ -95,7 +102,12 @@ public class CasaInteligente implements Serializable, Comparable {
         return locs;
     }
 
-    public void setOwner(String owner) {
+    public void setID(String id) {
+        this.id = id;
+    }
+    
+    public void setOwner(String owner) throws CasaInteligenteException  {
+        if (owner.equals("")) throw new CasaInteligenteException("Nome inválido");
         this.owner = owner;
     }
 
@@ -129,6 +141,7 @@ public class CasaInteligente implements Serializable, Comparable {
         if (!(o instanceof CasaInteligente)) return false;
         CasaInteligente casa = (CasaInteligente) o;
         return ( this.owner.equals(casa.getOwner()) &&
+                this.id == casa.getID() &&
                 this.nif == casa.getNif() &&
                 this.fornecedor.equals(casa.getFornecedor()) &&
                 this.devices.equals(casa.getDevices()) &&
@@ -137,7 +150,8 @@ public class CasaInteligente implements Serializable, Comparable {
 
     public String toString(){
         return  "\n### House ###" +
-                "\nOwner: " + this.owner +
+                "\nID: " + this.id +
+                " | Owner: " + this.owner +
                 " | NIF: " + this.nif +
                 " | Fornecedor: " + this.fornecedor +
                 "\nDevices " + this.devices.toString() +
@@ -175,7 +189,7 @@ public class CasaInteligente implements Serializable, Comparable {
         if (casa.custoCasa()>this.custoCasa()) return 1;
         else if (casa.custoCasa()<this.custoCasa()) return -1;
         else {
-            return casa.getOwner().compareTo( this.getOwner());
+            return casa.getID().compareTo( this.getID());
         }
     }
 
@@ -254,6 +268,8 @@ public class CasaInteligente implements Serializable, Comparable {
 
     public void addRoom(String room) throws CasaInteligenteException {
         if(this.locations.containsKey(room)) throw new CasaInteligenteException("Divisão " + room + " já existe");
+        if(room.equals("")) throw new CasaInteligenteException("Divisão inválida");
+        
         List<String> ids = new ArrayList<>();
         this.locations.put(room,ids);
     }

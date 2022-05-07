@@ -53,7 +53,7 @@ abstract class Fornecedor implements Serializable {
         return this.desconto;}
 
     public void setName(String name)throws FornecedorException {
-        if (this.desconto>100 || this.desconto<0) throw new FornecedorException("Nome Vazio");
+        if (name.equals("")) throw new FornecedorException("Nome Vazio");
         this.name = name;
     }
 

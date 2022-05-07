@@ -29,7 +29,7 @@ public class SmartSpeaker extends SmartDevice {
     public SmartSpeaker(String id, boolean state, float cost, int vol, String channel, String brand,float bd_comp) throws SmartDeviceException, SmartSpeakerException {
         super(id,state,cost);
 
-        if(brand.equals("") || bd_comp<0) throw  new  SmartSpeakerException("Valores Negativos");
+        if(channel.equals("") || brand.equals("") || bd_comp<0) throw  new  SmartSpeakerException("Valores Negativos --------");
 
         this.volume = Math.min(vol, MAX);
         this.channel = channel;
@@ -58,7 +58,7 @@ public class SmartSpeaker extends SmartDevice {
         return this.brand;
     }
 
-    public float getBrand_comsuption() {return brand_comsuption;}
+    public float getBrand_comsuption() {return this.brand_comsuption;}
 
     public void setVolume(int volume)  {
 

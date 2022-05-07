@@ -26,11 +26,15 @@ public class Controller {
                     break;
                     
                 case 2:
-                    ControllerCarregarDados.run(estado);
+                    ControllerCriarDados.run(estado);
                     break;
                     
                 case 3:
-                    try{estado = estado.carregaEstado();System.out.println("Ficheiros carregados com sucesso!!!\n");}
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.println("Introduza o nome do ficheiro objeto que pretende carregar: ");
+                    String filename = scanner.nextLine();
+                
+                    try{estado = estado.carregaEstado(filename);System.out.println("Ficheiros carregados com sucesso!!!\n");}
                     catch (FileNotFoundException e) {System.out.println("Ficheiro não encontrado");}
                     catch (IOException e) {System.out.println("Não foi possivel carregar o Estado");}
                     catch(ClassNotFoundException e) {System.out.println("Erro ao ler para as estruturas de dados");}
@@ -38,7 +42,11 @@ public class Controller {
                     break;
                 
                 case 4:
-                    try{estado.guardaEstado();System.out.println("Ficheiros salvos com sucesso!!!\n");}
+                    scanner = new Scanner(System.in);
+                    System.out.println("Introduza o nome do novo ficheiro .obj que deseja guardar: ");
+                    String file_name = scanner.nextLine();
+
+                    try{estado.guardaEstado(file_name);System.out.println("Ficheiros salvos com sucesso!!!\n");}
                     catch (FileNotFoundException e) {System.out.println("Ficheiro não encontrado");}
                     catch (IOException e) {System.out.println("Não foi possivel guardar o Estado");}
                     Menu.pressEnter();

@@ -15,7 +15,7 @@ public class Menu {
         clearWindow();
         StringBuilder sb = new StringBuilder("-----------MENU INICIAL-----------\n\n");
         sb.append("1) Simulação.\n");
-        sb.append("2) Criar Estado.\n");
+        sb.append("2) Criar/Alterar Estado.\n");
         sb.append("3) Carregar Estado.\n");
         sb.append("4) Guardar Estado.\n");
         sb.append("0) Sair.\n\n");
@@ -46,13 +46,13 @@ public class Menu {
     }
 
 
-    public static int MenuCarregarEstado() {
+    public static int MenuCriarEstado() {
         clearWindow();
         StringBuilder sb = new StringBuilder("-----------Menu Criar Estado -----------\n\n");
         sb.append("1) Criar nova Casa.\n");
         sb.append("2) Criar novo Dispositivo.\n");
         sb.append("3) Criar novo Fornecedor.\n");
-        sb.append("4) Carregar logs.\n");
+        sb.append("4) Carregar ficheiro csv.\n");
         sb.append("0) Retroceder.\n\n");
         sb.append("Selecione a opção pretendida: ");
         System.out.println(sb.toString());
@@ -85,19 +85,25 @@ public class Menu {
                 
         
         Scanner scanner = new Scanner(System.in);
-        
-        System.out.print("Defina o proprietário da casa: ");
-        String owner = scanner.nextLine();
-        smarthouse.setOwner(owner);
+        boolean i;
+        String owner;
 
+        do {
+            System.out.print("Defina o proprietário da casa: ");
+            owner = scanner.nextLine();
+        
+            try { smarthouse.setOwner(owner); i=false;}
+            catch (CasaInteligenteException e) {System.out.print(e + "\n"); i = true;}
+        } while(i);
+        
         Random num = new Random();
         StringBuilder houseid = new StringBuilder();
         int rand_num = num.nextInt(999999);
         houseid.append(owner + "-").append(rand_num);
         String id = houseid.toString();
         smarthouse.setID(id);
+        System.out.print(id);
 
-        boolean i;
         do {
             System.out.print("Defina o NIF do proprietário: ");
             int nif = scanner.nextInt();
@@ -119,34 +125,49 @@ public class Menu {
                 catch (CasaInteligenteException e) {System.out.print(e + "\n"); i = true;}
             } while(i);
             
+            
             System.out.println("Pretende criar mais divisões?");
             System.out.println("1) Sim");
             System.out.println("2) Não");
             int opcao = scanner.nextInt();
 
             if(opcao == 2) continuar = false;
+
         }
             return smarthouse;
     }
 
     public static void escolherFornecedor(Estado estado, CasaInteligente smarthouse) {
         
-        System.out.print("Lista de Fornecedores: \n");      
+        boolean i;
+        do {     
+            System.out.print("Lista de Fornecedores: \n");      
  
-        Scanner scanner = new Scanner(System.in);
+            Scanner scanner = new Scanner(System.in);
 
-        HashMap<String,Fornecedor> l = estado.getFornecedores();
+            HashMap<String,Fornecedor> l = estado.getFornecedores();
 
-        for(String name: l.keySet()) {
-            String key = name.toString();
-            System.out.println(" - " + key);
-        }
+            for(String name: l.keySet()) {
+                String key = name.toString();
+                System.out.println(" - " + key);
+            }
 
-        System.out.println("Escreva o nome do Fornecedor pretendido: ");
-        String option = scanner.nextLine();
-            
-        smarthouse.setFornecedor(l.get(option));   
-    
+            System.out.println("Escreva o nome do Fornecedor pretendido: ");
+            String option = scanner.nextLine();
+
+                    
+            if(l.containsKey(option)) {
+                smarthouse.setFornecedor(l.get(option));
+                i=false;
+            }
+
+            else {
+                i=true;
+                System.out.println("Fornecedor inválido, tente novamente");
+                Menu.pressEnter();
+            }
+        } while(i);
+
     }
     
     public static void menuCriaFornecedor(Estado estado) {
@@ -219,7 +240,7 @@ public class Menu {
     }
 
 
-    public static AbstractMap.SimpleEntry<String,String> menuDispositivo(Estado estado) {
+    public static String menuDispositivo(Estado estado) {
         clearWindow();
         
         Scanner scanner = new Scanner(System.in);
@@ -236,16 +257,32 @@ public class Menu {
 
         System.out.println("Escolha o id da casa: ");
         String id = scanner.nextLine();
+        
+        return id;
+    }
 
+
+    public static String menuDispositivo2(CasaInteligente casa) {
+        
+        Scanner scanner = new Scanner(System.in);
+               
+        
+        System.out.println("Lista de divisões: ");
+
+        Map<String,List<String>> l = casa.getLocations();
+        
+        for(String name: l.keySet()) {  
+            System.out.println(" - " + name);
+        }
 
         System.out.print("Escolha a respetiva divisão: ");
         String divisao = scanner.nextLine();
         
-        return new AbstractMap.SimpleEntry<>(id, divisao);
+        return divisao;
     }
 
 
-    public static DeviceType menuDispositivo2() {
+    public static DeviceType menuDispositivo3() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append("Selecione o Dispositivo que pretende criar.\n\n");
@@ -379,7 +416,7 @@ public class Menu {
         StringBuilder nomesb = new StringBuilder();
         int rand_num = num.nextInt(999999);
         nomesb.append("smtspk-").append(rand_num);
-        String nome= nomesb.toString();
+        String id= nomesb.toString();
         
         StringBuilder sb = new StringBuilder();
         
@@ -395,13 +432,12 @@ public class Menu {
        
 
         System.out.print("Defina a rádio online que está a tocar: ");
-        String channel = scanner.nextLine();
-        
-        String brand = scanner.nextLine();
+        String channel = scanner.nextLine();     
+        channel = scanner.nextLine();
 
         System.out.print("Defina a marca do Speaker: ");
-        brand = scanner.nextLine();
-
+        String brand = scanner.nextLine();
+        
         System.out.print("Defina o consumo da respetiva marca: ");
         Float brand_comsuption = scanner.nextFloat();
 
@@ -415,7 +451,7 @@ public class Menu {
         System.out.print("Defina o custo de instalação: ");
         Float cust_inst = scanner.nextFloat();
 
-        try {smartspeaker = new SmartSpeaker(nome, bool, cust_inst, volume, channel, brand, brand_comsuption); i=false;}
+        try {smartspeaker = new SmartSpeaker(id, bool, cust_inst, volume, channel, brand, brand_comsuption); i=false;}
         catch (SmartSpeakerException e) {System.out.print(e + "\n"); i=true;}
         catch (SmartDeviceException e) {System.out.print(e + "\n"); i=true;}
         } while(i);   
