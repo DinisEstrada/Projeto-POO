@@ -72,12 +72,14 @@ Também se consegue controlar o input de valores não válidos, assim como, asse
   - mudar valores praticados pelo fornecedor (valor_base,desconto,imposto)
  
 ### Tarefas por fazer:
-- MENU e SUBMENUS (DINIS)
+- MENU e SUBMENUS (DINIS - em processo)
 - executar uma simulação (calculo do consumo na evolução temporal de um estado)
 - Automatizar as mudanças com um parser de informação
   - ideia: pede-se o periodo de faturação e entre ele criar mini faturas entre cada mudança de estado. guarda-se as mini faturas e depois somam-se todas.
 - [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
 - [Extra] Verificar se esta tudo por composição. 
 
-//COISAS A CORRIGIR
+## COISAS A CORRIGIR
 - quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices (zé-DONE)
+- mudar os setters de fornecedores e casas(zé-Done)
+- mudar a mensagem de erro do add room (zé-Done)
