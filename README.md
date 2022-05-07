@@ -79,5 +79,5 @@ Também se consegue controlar o input de valores não válidos, assim como, asse
 - [Extra] Criar ficheiros de testes Casa-SmartDevice-Fornecedor- /*automatizar processo de testagem*/
 - [Extra] Verificar se esta tudo por composição. 
 
-//COISAS A CORRIGIR
+## COISAS A CORRIGIR
 - quando os sores mandarem o ficheiro logs direito corrigir a inserção dos campos dos sumartdevices (zé-DONE)
