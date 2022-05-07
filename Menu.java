@@ -15,8 +15,9 @@ public class Menu {
         clearWindow();
         StringBuilder sb = new StringBuilder("-----------MENU INICIAL-----------\n\n");
         sb.append("1) Simulação.\n");
-        sb.append("2) Carregar Estado.\n");
-        sb.append("3) Guardar Estado.\n");
+        sb.append("2) Criar Estado.\n");
+        sb.append("3) Carregar Estado.\n");
+        sb.append("4) Guardar Estado.\n");
         sb.append("0) Sair.\n\n");
         sb.append("Selecione a opção pretendida: ");
         System.out.println(sb.toString());
@@ -47,11 +48,26 @@ public class Menu {
 
     public static int MenuCarregarEstado() {
         clearWindow();
-        StringBuilder sb = new StringBuilder("-----------Menu Carregar Estado -----------\n\n");
+        StringBuilder sb = new StringBuilder("-----------Menu Criar Estado -----------\n\n");
         sb.append("1) Criar nova Casa.\n");
         sb.append("2) Criar novo Dispositivo.\n");
         sb.append("3) Criar novo Fornecedor.\n");
         sb.append("4) Carregar logs.\n");
+        sb.append("0) Retroceder.\n\n");
+        sb.append("Selecione a opção pretendida: ");
+        System.out.println(sb.toString());
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+
+    public static int MenuSimulacao() {
+        clearWindow();
+        StringBuilder sb = new StringBuilder("-----------Menu Simulação -----------\n\n");
+        sb.append("1) Avançar no tempo.\n");
+        sb.append("2) Mudar Estado.\n");
+        sb.append("3) Estatísticas.\n");
+        sb.append("4) Emitir Faturas.\n");
         sb.append("0) Retroceder.\n\n");
         sb.append("Selecione a opção pretendida: ");
         System.out.println(sb.toString());

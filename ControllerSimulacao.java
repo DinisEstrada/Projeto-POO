@@ -5,14 +5,14 @@ import ErrorHandling.SmartBulbException;
 import java.io.*;
 
 public class ControllerSimulacao {
-        public static void run() {
+        public static void run(Estado estado) {
             
             boolean exit = false;
             boolean errorMessage = false;
             while(!exit){
                 int opcao = -1;
                 while(opcao < 0 || opcao > 7) {
-                    opcao = Menu.MenuCarregarEstado();
+                    opcao = Menu.MenuSimulacao();
                 }
            
                 switch(opcao) {

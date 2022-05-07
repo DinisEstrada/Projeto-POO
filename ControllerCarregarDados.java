@@ -54,19 +54,22 @@ public class ControllerCarregarDados {
                             
                             if(devicetype.equals(DeviceType.SmartBulb)) {
                                 do {
-                                    try {SmartBulb bulb = Menu.menuSmartBulb(); casa.addDevice(bulb,room); i=false;}
+                                    SmartBulb bulb = Menu.menuSmartBulb();
+                                    try {casa.addDevice(bulb,room); i=false;}
                                     catch (CasaInteligenteException e) {System.out.print(e + "\n"); i=true;}
                                 } while(i);
                             }
                             else if (devicetype.equals(DeviceType.SmartCamera)) {
                                 do {
-                                    try {SmartCamera camera = Menu.menuSmartCamera(); casa.addDevice(camera,room); i=false;}
+                                    SmartCamera camera = Menu.menuSmartCamera(); 
+                                    try {casa.addDevice(camera,room); i=false;}
                                     catch (CasaInteligenteException e) {System.out.print(e + "\n"); i=true;}
                                 } while(i); 
                             }
                             else {
                                 do {
-                                    try {SmartSpeaker speaker = Menu.menuSmartSpeaker(); casa.addDevice(speaker,room); i=false;}
+                                    SmartSpeaker speaker = Menu.menuSmartSpeaker();
+                                    try {casa.addDevice(speaker,room); i=false;}
                                     catch (CasaInteligenteException e) {System.out.print(e + "\n"); i=true;}
                                 } while(i); 
                             }

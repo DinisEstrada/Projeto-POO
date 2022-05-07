@@ -100,8 +100,8 @@ public class Estado implements Serializable {
         this.casas.remove(fornecedor.getName());
     }
 
-    public void guardaEstado(String nomeFicheiro) throws FileNotFoundException, IOException {
-        FileOutputStream fos = new FileOutputStream(nomeFicheiro);
+    public void guardaEstado() throws FileNotFoundException, IOException {
+        FileOutputStream fos = new FileOutputStream("Estado.obj");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(this);
         oos.flush();
@@ -109,8 +109,8 @@ public class Estado implements Serializable {
         fos.close();
     }
 
-    public static Estado carregaEstado(String nomeFicheiro) throws FileNotFoundException, IOException, ClassNotFoundException {
-        FileInputStream fos = new FileInputStream(nomeFicheiro);
+    public Estado carregaEstado() throws FileNotFoundException, IOException, ClassNotFoundException {
+        FileInputStream fos = new FileInputStream("Estado.obj");
         ObjectInputStream oos = new ObjectInputStream(fos);
         Estado c = (Estado) oos.readObject();
         oos.close();
