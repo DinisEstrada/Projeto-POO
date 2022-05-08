@@ -27,7 +27,9 @@ public class ControllerCriarDados {
                         }
                         else {
                             CasaInteligente casa = Menu.MenuCriarCasa(estado);    
-                            Menu.escolherFornecedor(estado, casa);
+                            Fornecedor forn = Menu.escolherFornecedor(estado, casa);
+                            casa.setFornecedor(forn);
+                            
                             try {estado.adicionaCasa(casa);}
                             catch(EstadoException e) {System.out.println(e + "\n");}
                         }
@@ -86,7 +88,34 @@ public class ControllerCriarDados {
                         break;
                     
                     case 3:
-                        Menu.menuCriaFornecedor(estado);    
+                        Menu.clearWindow();
+                        System.out.print("-----------Menu Criar Fornecedor -----------\n\n");
+
+                        Fornecedor forn = null;
+                
+                        Random rand = new Random();
+                            int upperbound = 3;
+                            int int_rand = rand.nextInt(upperbound);
+                
+                            switch(int_rand) {
+                                case 1:
+                                    forn = new FornecedorB();
+                                    break;
+                
+                                case 2:
+                                    forn = new FornecedorC();
+                                    break;
+                
+                                case 0:
+                                    forn = new FornecedorA();
+                                    break;
+                            }
+
+                        Menu.menuCriaAlteraFornecedor(estado, forn, true);
+                        
+                        try{estado.adicionaFornecedor(forn);}
+                        catch(EstadoException e) {System.out.println(e + "\n");}
+                        
                         break;
                     
                     case 4:

@@ -102,7 +102,6 @@ public class Menu {
         houseid.append(owner + "-").append(rand_num);
         String id = houseid.toString();
         smarthouse.setID(id);
-        System.out.print(id);
 
         do {
             System.out.print("Defina o NIF do proprietário: ");
@@ -137,10 +136,9 @@ public class Menu {
             return smarthouse;
     }
 
-    public static void escolherFornecedor(Estado estado, CasaInteligente smarthouse) {
+    public static Fornecedor escolherFornecedor(Estado estado, CasaInteligente casa) {
         
-        boolean i;
-        do {     
+    
             System.out.print("Lista de Fornecedores: \n");      
  
             Scanner scanner = new Scanner(System.in);
@@ -152,12 +150,16 @@ public class Menu {
                 System.out.println(" - " + key);
             }
 
+        boolean i;
+        String option;
+        
+        do { 
+            
             System.out.println("Escreva o nome do Fornecedor pretendido: ");
-            String option = scanner.nextLine();
+            option = scanner.nextLine();
 
                     
             if(l.containsKey(option)) {
-                smarthouse.setFornecedor(l.get(option));
                 i=false;
             }
 
@@ -168,75 +170,52 @@ public class Menu {
             }
         } while(i);
 
+        return l.get(option);
     }
     
-    public static void menuCriaFornecedor(Estado estado) {
-        clearWindow();
-        
-        System.out.print("-----------Menu Criar Fornecedor -----------\n\n");
-
-        Fornecedor forn = null;
-        boolean i;
-
-        Random rand = new Random();
-            int upperbound = 3;
-            int int_rand = rand.nextInt(upperbound);
-
-            switch(int_rand) {
-                case 1:
-                    forn = new FornecedorB();
-                    break;
-
-                case 2:
-                    forn = new FornecedorC();
-                    break;
-
-                case 0:
-                    forn = new FornecedorA();
-                    break;
-            }
-            do {
+    public static Fornecedor menuCriaAlteraFornecedor(Estado estado, Fornecedor forn, boolean criar) {
                 
-                Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        boolean i; 
 
-                do {
-    
-                    System.out.print("Introduza o nome do Fornecedor: ");
-                    String name = scanner.nextLine();
-                    
-                    try { forn.setName(name); i=false;}
-                    catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
-                }   while(i); 
-
-                do {
-                    System.out.print("Defina o valor base: ");
-                    Float valor_base = scanner.nextFloat();
+        if(criar) {
+            do { 
+                System.out.print("Introduza o nome do Fornecedor: ");
+                String name = scanner.nextLine();
+                        
+                try { forn.setName(name); i=false;}
+                catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
+            }   while(i); 
+        }
         
-                    try { forn.setValor_base(valor_base); i=false;}
-                    catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
-                } while(i);
+        do {
+            System.out.print("Defina o valor base: ");
+            Float valor_base = scanner.nextFloat();
+        
+            try { forn.setValor_base(valor_base); i=false;}
+            catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
+        } while(i);
         
         
-                do {
-                    System.out.print("Defina o imposto: ");
-                    Float imposto = scanner.nextFloat();
+        do {
+            System.out.print("Defina o imposto: ");
+            Float imposto = scanner.nextFloat();
         
-                    try { forn.setImposto(imposto); i=false;}
-                    catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
-                } while(i);
+            try { forn.setImposto(imposto); i=false;}
+            catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
+        } while(i);
 
-                do {
-                    System.out.print("Defina o desconto: ");
-                    Float desconto = scanner.nextFloat();
-                    System.out.print("\n");
+        do {
+            System.out.print("Defina o desconto: ");
+            Float desconto = scanner.nextFloat();
+            System.out.print("\n");
 
-                    try { forn.setDesconto(desconto); i=false;}
-                    catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
-                } while(i);
+            try { forn.setDesconto(desconto); i=false;}
+            catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
+        } while(i);
 
-                try {estado.adicionaFornecedor(forn); i=false;}
-                catch (EstadoException e) {System.out.print(e + "\n"); i = true;}
-            } while(i);
+       return forn;
+            
     }
 
 
@@ -459,4 +438,173 @@ public class Menu {
         return smartspeaker;
     }
     
+    public static int menuMudarEstado() {
+        clearWindow();
+        StringBuilder sb = new StringBuilder("-----------MENU MUDAR ESTADO-----------\n\n");
+        sb.append("1) Mudar de Fornecedor de uma Casa.\n");
+        sb.append("2) Mudar Valores de um Fornecedor.\n");
+        sb.append("3) Ligar e Desligar Dispositivos de uma Casa.\n");
+        sb.append("0) Retroceder.\n\n");
+        sb.append("Selecione a opção pretendida: ");
+        System.out.println(sb.toString());
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+    public static int menuLigarDesligar() {
+        clearWindow();
+        StringBuilder sb = new StringBuilder("-----------Menu ON/OFF-----------\n\n");
+        sb.append("1) ON/OFF Dispositivo.\n");
+        sb.append("2) ON/OFF Todos os Dispositivos da Divisão.\n");
+        sb.append("0) Retroceder.\n\n");
+        sb.append("Selecione a opção pretendida: ");
+        System.out.println(sb.toString());
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+    public static CasaInteligente escolherCasa(Estado estado) {
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Lista de casas: ");
+
+        HashMap<String,CasaInteligente> l = estado.getCasas();
+        
+        for(String name: l.keySet()) {  
+            System.out.println(" - " + name);
+        }
+
+        String id;
+        boolean continuar;
+        
+        do {
+            System.out.println("Escolha o id da casa: ");
+            id = scanner.nextLine();        
+            if(!l.containsKey(id)) {continuar = true; System.out.println("ID inválido, tente novamente");}
+            else continuar = false;
+        } while (continuar);
+
+        return l.get(id);
+        
+    }
+
+    public static String escolherDivisão(CasaInteligente casa) {
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        Map<String, List<String>> locations = casa.getLocations();
+
+        for(String name: locations.keySet()) {  
+            System.out.println(" - " + name);
+        }
+        
+        boolean continuar;
+        String divisao;
+
+        do {
+            System.out.println("Escolha a divisão da casa: ");
+            divisao = scanner.nextLine();        
+            if(!casa.hasRoom(divisao)) {continuar = true; System.out.println("Divisão inválida, tente novamente");}
+            else continuar = false;
+        } while (continuar);
+
+        return divisao;
+        
+    }
+
+    public static void ONOFFDispositivo(CasaInteligente casa, String room) {
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Lista de dispositivos na divisão: ");
+
+        List<SmartDevice> l = casa.getDevicesinRoom(room);
+        
+        for(SmartDevice name: l) {  
+            System.out.println(" - " + name.getID());
+        }
+
+        String device_id;
+        boolean continuar;
+        SmartDevice smtd = null;
+        
+        do {
+            System.out.println("Escolha o id do dispositivo: ");
+            device_id = scanner.nextLine();        
+            
+            try {smtd = casa.getDevice(device_id); continuar = false;}
+            catch (CasaInteligenteException e) {System.out.println(e + "\n"); continuar = true;}
+        
+        } while (continuar);
+
+        StringBuilder sb = new StringBuilder("O que pretende fazer com o dispositivo " + device_id + "\n\n");
+        sb.append("1) Set to ON.\n");
+        sb.append("2) Set to OFF.\n");
+        System.out.println(sb.toString());
+        int option = scanner.nextInt();
+
+        switch(option) {
+            case 1:
+                smtd.turnOn();
+                break;
+            case 2:
+                smtd.turnOff();
+                break;
+        }
+    }
+
+    public static void ONOFFDivisão(CasaInteligente casa, String room) {
+        
+        Scanner scanner = new Scanner(System.in);
+
+        StringBuilder sb = new StringBuilder("O que pretende fazer com os dispositivos da divisão " + room + "\n\n");
+        sb.append("1) Set all devices ON.\n");
+        sb.append("2) Set all devices OFF.\n");
+        System.out.println(sb.toString());
+        int option = scanner.nextInt();
+
+        switch(option) {
+            case 1:
+                try {casa.turnRoomOn(room);}
+                catch (CasaInteligenteException e) {System.out.println(e + "\n");}
+                break;
+            case 2:
+                try {casa.turnRoomOff(room);}
+                catch (CasaInteligenteException e) {System.out.println(e + "\n");}
+                break;
+        }
+    }
+     
+    public static Fornecedor escolherFornecedor(Estado estado) {
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Lista de fornecedores: ");
+
+        HashMap<String,Fornecedor> l = estado.getFornecedores();
+        
+        for(String name: l.keySet()) {  
+            System.out.println(" - " + name);
+        }
+
+        String forn;
+        boolean continuar;
+        
+        do {
+            System.out.println("Escolha um fornecedor: ");
+            forn = scanner.nextLine();        
+            
+            if(l.containsKey(forn)) {continuar = false;}
+            else {System.out.println("Fornecedor inválido, tente novamente"); continuar = true;}
+        
+        } while (continuar);
+
+        return l.get(forn);
+    }
+
 }
+
+
+
+

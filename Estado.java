@@ -53,14 +53,12 @@ public class Estado implements Serializable {
     }
 
     public void setFornecedores(HashMap<String, Fornecedor> fornecedores) throws EstadoException {
-        this.fornecedores = new HashMap<>();
         for(Fornecedor ent : fornecedores.values()){
             adicionaFornecedor(ent);
         }
     }
 
     public void setCasas(HashMap<String, CasaInteligente> casas) throws EstadoException {
-        this.casas = new HashMap<>();
         for(CasaInteligente ent : casas.values()){
             adicionaCasa(ent);
         }

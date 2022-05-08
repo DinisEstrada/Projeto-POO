@@ -4,33 +4,33 @@ import ErrorHandling.SmartBulbException;
 
 import java.io.*;
 
-public class ControllerSimulacao {
+public class ControllerMudarEstado {
         public static void run(Estado estado) {
             
             boolean exit = false;
             boolean errorMessage = false;
             while(!exit){
                 int opcao = -1;
-                while(opcao < 0 || opcao > 7) {
-                    opcao = Menu.MenuSimulacao();
+                while(opcao < 0 || opcao > 4) {
+                    opcao = Menu.menuMudarEstado();
                 }
            
                 switch(opcao) {
                     
                     case 1:
-                        
+                        CasaInteligente casa = Menu.escolherCasa(estado);
+                        Fornecedor forn1 = Menu.escolherFornecedor(estado, casa);
+                        casa.setFornecedor(forn1);
                         break;
                         
                     case 2:
-                        ControllerMudarEstado.run(estado);
+                        Fornecedor forn2 = Menu.escolherFornecedor(estado);
+                        Menu.menuCriaAlteraFornecedor(estado, forn2, false);
                         break;
 
                     case 3:
-                        
+                        ControllerOnOff.run(estado);
                         break;
-                    
-                    case 4:
-
                     
                     case 0:
                         exit = true;
