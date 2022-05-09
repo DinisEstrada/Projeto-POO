@@ -4,6 +4,7 @@ import ErrorHandling.FornecedorException;
 import ErrorHandling.SmartDeviceException;
 import java.io.*;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -326,7 +327,7 @@ public class CasaInteligente implements Serializable, Comparable {
                 .sum();
     }
 
-    public Fatura faturaCasa(String inicio, String fim) throws FaturaException, ParseException {
+    public Fatura faturaCasa(LocalDate inicio, LocalDate fim) throws FaturaException, ParseException {
         return new Fatura(this,inicio, fim);
     }
 

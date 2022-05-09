@@ -7,17 +7,24 @@ import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class Estado implements Serializable {
 
+
+    private LocalDate date;
     private HashMap<String,CasaInteligente> casas;
     private HashMap<String,Fornecedor> fornecedores;
 
     public Estado(){
+        this.date = LocalDate.now();
         this.casas = new HashMap<>();
         this.fornecedores = new HashMap<>();
     }
 
+
+    // nao se esta a usar esta função de momento
     public Estado(HashMap<String,CasaInteligente> housesConfig, HashMap<String,Fornecedor> fornecedores){
         this.casas = new HashMap<>();
         for(Map.Entry<String,CasaInteligente> ent : housesConfig.entrySet()){
@@ -31,8 +38,13 @@ public class Estado implements Serializable {
     }
 
     public Estado(Estado est){
+        this.date = est.getDate();
         this.casas = est.getCasas();
         this.fornecedores = est.getFornecedores();
+    }
+
+    public LocalDate getDate() {
+        return this.date;
     }
 
 
@@ -50,6 +62,10 @@ public class Estado implements Serializable {
             forns.put(ent.getKey(),ent.getValue().clone());
         }
         return forns;
+    }
+
+    public void setDate(int dia, int mes, int ano) {
+        this.date = LocalDate.of(ano, mes, dia);
     }
 
     public void setFornecedores(HashMap<String, Fornecedor> fornecedores) throws EstadoException {
@@ -118,7 +134,7 @@ public class Estado implements Serializable {
         return c;
     }
 
-    public HashMap<String,Fatura> geradorFaturas(String inicio, String fim){
+    public HashMap<String,Fatura> geradorFaturas(LocalDate inicio, LocalDate fim){
         HashMap<String,Fatura> fats = new HashMap<>();
 
         this.casas.values().stream().forEach(casa -> {
@@ -185,11 +201,7 @@ public class Estado implements Serializable {
 
         for(Fornecedor forn : this.fornecedores.values()){
             consumoforn =faturasFornecedor(forn).stream().mapToDouble(a-> {
-                try {
-                    return a.valor_fatura();
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
+                return a.valor_fatura();
             }).sum();
            if (consumomaior <  consumoforn) {
                consumomaior =  consumoforn;

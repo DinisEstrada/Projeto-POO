@@ -1,33 +1,30 @@
 import ErrorHandling.*;
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 
 public class Fatura implements Comparable, Serializable {
 
-    SimpleDateFormat sdf
-            = new SimpleDateFormat(
-            "dd-MM-yyyy");
-
     private CasaInteligente casa;
 
-    private String inicio_faturacao;
-    private String fim_faturacao;
+    private LocalDate inicio_faturacao;
+    private LocalDate fim_faturacao;
 
     private float consumo;
     private float custo;
 
     public Fatura(){
         this.casa = new CasaInteligente();
-        this.inicio_faturacao = "";
-        this.fim_faturacao = "";
+        this.inicio_faturacao = LocalDate.now();
+        this.fim_faturacao = LocalDate.now();
         this.consumo=0;
         this.custo=0;
     }
 
-    public Fatura(CasaInteligente casa, String inicio, String fim) throws FaturaException, ParseException {
-        if (perido_fat(inicio,fim)<0) throw new FaturaException("Data de ínicio posterior à Data de fim");
+    public Fatura(CasaInteligente casa, LocalDate inicio, LocalDate fim) throws FaturaException, ParseException {
+        if (fim.isBefore(inicio)) throw new FaturaException("Data de ínicio posterior à Data de fim");
 
         this.casa = casa.clone();
         this.inicio_faturacao = inicio;
@@ -37,7 +34,7 @@ public class Fatura implements Comparable, Serializable {
     }
 
     public Fatura(Fatura f) throws FaturaException, ParseException {
-        if (perido_fat(f.getInicio_faturacao(),f.getFim_faturacao())<0) throw new FaturaException("Data de ínicio posterior à Data de fim");
+        if (f.getInicio_faturacao().until(f.getFim_faturacao(),ChronoUnit.DAYS)<0) throw new FaturaException("Data de ínicio posterior à Data de fim");
         if(f.getConsumo()<0 || f.getCusto()<0) throw new FaturaException("Valor de dias negativo");
 
         this.inicio_faturacao = f.getInicio_faturacao();
@@ -49,11 +46,11 @@ public class Fatura implements Comparable, Serializable {
 
     public CasaInteligente getCasa() {return this.casa.clone();}
 
-    public String getInicio_faturacao() {
+    public LocalDate getInicio_faturacao() {
         return this.inicio_faturacao;
     }
 
-    public String getFim_faturacao() {
+    public LocalDate getFim_faturacao() {
         return this.fim_faturacao;
     }
     public float getConsumo() {
@@ -69,11 +66,11 @@ public class Fatura implements Comparable, Serializable {
         this.casa = casa.clone();
     }
 
-    public void setInicio_faturacao(String inicio_faturacao) {
+    public void setInicio_faturacao(LocalDate inicio_faturacao) {
         this.inicio_faturacao = inicio_faturacao;
     }
 
-    public void setFim_faturacao(String fim_faturacao) {
+    public void setFim_faturacao(LocalDate fim_faturacao) {
         this.fim_faturacao = fim_faturacao;
     }
 
@@ -96,16 +93,12 @@ public class Fatura implements Comparable, Serializable {
     }
 
     public String toString(){
-        try {
-            return "\n###### Fatura ######"+
-                    "\nCasa: " + this.casa.getID() +
-                    "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
-                     "\nInicio: " + this.inicio_faturacao + " | Fim: " + this.fim_faturacao + " | Período: " + perido_fat(this.inicio_faturacao,this.fim_faturacao) +
-                    " dia(s)\nConsumo: " + this.consumo+
-                    " kWh\nValor: " + this.custo+" €";
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        return "\n###### Fatura ######"+
+                "\nCasa: " + this.casa.getID() +
+                "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
+                 "\nInicio: " + this.inicio_faturacao + " | Fim: " + this.fim_faturacao + " | Período: " + inicio_faturacao.until(fim_faturacao, ChronoUnit.DAYS) +
+                " dia(s)\nConsumo: " + this.consumo+
+                " kWh\nValor: " + this.custo+" €";
 
     }
 
@@ -150,17 +143,18 @@ public class Fatura implements Comparable, Serializable {
 
     //---------------------------------------------------
 
-    private float consumoFatura() throws ParseException {
-        return (float) casa.consumoCasa()*perido_fat(this.inicio_faturacao, this.fim_faturacao);
+    private float consumoFatura() {
+        return (float) casa.consumoCasa()*inicio_faturacao.until(fim_faturacao, ChronoUnit.DAYS);
     }
 
 
-    public float valor_fatura() throws ParseException {
-
-        return (float) this.casa.custoCasa()*perido_fat(this.inicio_faturacao, this.fim_faturacao);
+    public float valor_fatura() {
+        return (float) this.casa.custoCasa()*inicio_faturacao.until(fim_faturacao, ChronoUnit.DAYS);
     }
 
+}
 
+/*
     public long difTime(String inicio, String fim) throws ParseException {
         Date d1 = sdf.parse(inicio);
         Date d2 = sdf.parse(fim);
@@ -172,3 +166,4 @@ public class Fatura implements Comparable, Serializable {
         return (difTime(inicio,fim) / (1000 * 60 * 60 * 24)) % 365;
     }
 }
+*/

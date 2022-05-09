@@ -7,6 +7,9 @@ import java.io.*;
 public class ControllerSimulacao {
         public static void run(Estado estado) {
             
+            Estado old_estado = estado;
+            Estado new_estado = estado.clone();
+
             boolean exit = false;
             boolean errorMessage = false;
             while(!exit){
@@ -18,11 +21,19 @@ public class ControllerSimulacao {
                 switch(opcao) {
                     
                     case 1:
+                        Menu.avancarTempo(new_estado);
+                        if(new_estado.getDate().isAfter(old_estado.getDate())) {
+                            //calcular consumo de cada casa
+                            
+                        }
+                        else {
+                            System.out.print("Data inválida");
+                        }
                         
                         break;
                         
                     case 2:
-                        ControllerMudarEstado.run(estado);
+                        ControllerMudarEstado.run(new_estado);
                         break;
 
                     case 3:

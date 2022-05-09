@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Random;
 
 public class Menu {
@@ -601,6 +601,24 @@ public class Menu {
         } while (continuar);
 
         return l.get(forn);
+    }
+
+
+    public static void avancarTempo(Estado estado) {
+        
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.println("Escolha a data a que pretende avançar. ");
+        System.out.println("Dia: ");
+        int dia = scanner.nextInt();
+        
+        System.out.println("Mês: ");
+        int mes = scanner.nextInt();
+        
+        System.out.println("Ano: ");
+        int ano = scanner.nextInt();
+
+        estado.setDate(dia, mes, ano);
     }
 
 }
