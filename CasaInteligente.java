@@ -155,12 +155,12 @@ public class CasaInteligente implements Serializable, Comparable {
                 " | Owner: " + this.owner +
                 " | NIF: " + this.nif +
                 " | Fornecedor: " + this.fornecedor); 
-        sb.append ("\nDevices: "); 
+        sb.append ("\nDispositivos: "); 
         
         for(SmartDevice smtd : this.devices.values()) {
             sb.append(smtd);
         }
-        sb.append("\n\nRooms: ");
+        sb.append("\n\nDivisões: ");
         
         for(Map.Entry<String,List<String>> r : this.locations.entrySet()) {
             sb.append("\n" + r.getKey() + ": ");

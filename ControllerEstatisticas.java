@@ -19,14 +19,14 @@ public class ControllerEstatisticas {
                     switch(opcao) {
                         
                         case 1: 
-                            CasaInteligente casa_mais_gastou = current_estado.casaMaisGastou();
+                            CasaInteligente casa_mais_gastou = old_estado.casaMaisGastou();
                             System.out.println("-----------CASA QUE MAIS GASTOU-----------\n\n");
                             System.out.println(casa_mais_gastou.toString());
                             Menu.pressEnter();
                             break;
                         
                         case 2:
-                            Fornecedor maior_faturação = current_estado.fornecedorMaisFaturou(old_estado.getDate(), current_estado.getDate());
+                            Fornecedor maior_faturação = old_estado.fornecedorMaisFaturou(old_estado.getDate(), current_estado.getDate());
                             System.out.println("-----------Fornecedor com maior volume de faturação-----------\n\n");
                             System.out.println(maior_faturação.toString());
                             Menu.pressEnter();
@@ -34,13 +34,13 @@ public class ControllerEstatisticas {
 
                         case 3:
                             int top = Menu.escolherNtopCasas();
-                            TreeSet<CasaInteligente> casas = current_estado.casasMaiorConsumo((int) old_estado.getDate().until(current_estado.getDate(), ChronoUnit.DAYS));
+                            TreeSet<CasaInteligente> casas = old_estado.casasMaiorConsumo((int) old_estado.getDate().until(current_estado.getDate(), ChronoUnit.DAYS));
                             ArrayList<CasaInteligente> l = new ArrayList<>();
                             
                             l.addAll(casas);
 
                             if (top > l.size() || top < 1) {
-                                System.out.println("Valor de N incorreto");
+                                System.out.println("Valor de N incorreto, Size = " + l.size());
                             }
                             
                             else {

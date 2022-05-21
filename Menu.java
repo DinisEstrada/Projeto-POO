@@ -193,7 +193,7 @@ public class Menu {
         else name = forn.getName();
         
         do {
-            System.out.print("Defina o valor base: ");
+            System.out.print("Defina o preço de energia (€ por kwh): ");
             valor_base = scanner.nextFloat();
         
             try { forn.setValor_base(valor_base); i=false;}
@@ -542,12 +542,12 @@ public class Menu {
 
         switch(option) {
             case 1:
-                try {casa.turnRoomOn(room);}
-                catch (CasaInteligenteException e) {System.out.println(e + "\n");}
+                try {estado.turnRoomOn(casa, room);}
+                catch (CasaInteligenteException | EstadoException e) {System.out.println(e + "\n");}
                 break;
             case 2:
-                try {casa.turnRoomOff(room);}
-                catch (CasaInteligenteException e) {System.out.println(e + "\n");}
+                try {estado.turnRoomOFF(casa, room);}
+                catch (CasaInteligenteException | EstadoException e) {System.out.println(e + "\n");}
                 break;
         }
     }
@@ -557,18 +557,18 @@ public class Menu {
         Scanner scanner = new Scanner(System.in);
 
         StringBuilder sb = new StringBuilder("O que pretende fazer com os dispositivos da casa \n\n");
-        sb.append("1) Desligar tudo.\n");
-        sb.append("2) Ligar tudo.\n");
+        sb.append("1) Ligar tudo.\n");
+        sb.append("2) Desligar tudo.\n");
         System.out.println(sb.toString());
         int option = scanner.nextInt();
 
         switch(option) {
             case 1:
-                try {estado.turnALLOFF(casa);}
+                try {estado.turnALLON(casa);}
                 catch (CasaInteligenteException | EstadoException e) {System.out.println(e + "\n");}
                 break;
             case 2:
-                try {estado.turnALLON(casa);;}
+                try {estado.turnALLOFF(casa);;}
                 catch (CasaInteligenteException | EstadoException e) {System.out.println(e + "\n");}
                 break;
         }
