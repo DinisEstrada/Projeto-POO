@@ -1,5 +1,6 @@
 import java.util.*;
 
+import ErrorHandling.EstadoException;
 import ErrorHandling.SmartBulbException;
 
 import java.io.*;
@@ -20,7 +21,8 @@ public class ControllerMudarEstado {
                     case 1:
                         CasaInteligente casa = Menu.escolherCasa(estado);
                         Fornecedor forn1 = Menu.escolherFornecedor(estado, casa);
-                        casa.setFornecedor(forn1);
+                        try {estado.mudaFornecedor(casa, forn1.getName());}
+                        catch (EstadoException e) {System.out.print(e + "\n");}
                         break;
                         
                     case 2:

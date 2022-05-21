@@ -150,14 +150,30 @@ public class CasaInteligente implements Serializable, Comparable {
     }
 
     public String toString(){
-        return  "\n### House ###" +
-                "\nID: " + this.id +
+        StringBuilder sb = new StringBuilder( "\n### House ###");
+        sb.append("\nID: " + this.id +
                 " | Owner: " + this.owner +
                 " | NIF: " + this.nif +
-                " | Fornecedor: " + this.fornecedor +
-                "\nDevices " + this.devices.toString() +
-                "\n\nRooms: " + this.locations.toString();
+                " | Fornecedor: " + this.fornecedor); 
+        sb.append ("\nDevices: "); 
+        
+        for(SmartDevice smtd : this.devices.values()) {
+            sb.append(smtd);
+        }
+        sb.append("\n\nRooms: ");
+        
+        for(Map.Entry<String,List<String>> r : this.locations.entrySet()) {
+            sb.append("\n" + r.getKey() + ": ");
+            for(String id : r.getValue()) {
+                sb.append(id + ", ");
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
+
     }
+
+
     public CasaInteligente clone(){
         try {
             return new CasaInteligente(this);

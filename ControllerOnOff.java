@@ -11,26 +11,35 @@ public class ControllerOnOff {
             boolean errorMessage = false;
             while(!exit){
                 int opcao = -1;
-                while(opcao < 0 || opcao > 2) {
+                while(opcao < 0 || opcao > 3) {
                     opcao = Menu.menuLigarDesligar();
                 }
 
-                if (opcao == 1 || opcao == 2) {
+                if (opcao == 1 || opcao == 2 || opcao == 3) {
                     
                     CasaInteligente casa = Menu.escolherCasa(estado);
-                    String room = Menu.escolherDivisão(casa);
+                    
+                    if (opcao == 1 || opcao == 2) {
+                        String room = Menu.escolherDivisão(casa);
 
-                    switch(opcao) {
+                        switch(opcao) {
                         
-                        case 1: 
-                            Menu.ONOFFDispositivo(casa, room);
-                            break;
+                            case 1: 
+                                Menu.ONOFFDispositivo(estado, casa, room);
+                                break;
                         
-                        case 2:
-                            Menu.ONOFFDivisão(casa, room);
-                            break;
+                            case 2:
+                                Menu.ONOFFDivisão(estado, casa, room);
+                                break;
+                        }
                     }
+
+                    else {
+                        Menu.ONOFFCasa(estado, casa);
+                    }
+                
                 }
+                
                 else {
                     exit = true;
                     Menu.clearWindow();

@@ -6,11 +6,10 @@ public class Controller {
     public static void run() {
         
         Estado estado = new Estado();
-        boolean errorMessage = false;
         
         while(true){
             int opcao = -1;
-            while(opcao < 0 || opcao > 7) {
+            while(opcao < 0 || opcao > 4) {
                 opcao = Menu.MenuInicial();
             }
        

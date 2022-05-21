@@ -2,7 +2,6 @@ import ErrorHandling.*;
 import java.io.*;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.temporal.ChronoUnit;
 
 public class Fatura implements Comparable, Serializable {
@@ -98,7 +97,7 @@ public class Fatura implements Comparable, Serializable {
                 "\nFornecedor: " + this.casa.getFornecedor().getName() + " | " + this.casa.getFornecedor().getClass().getName() +
                  "\nInicio: " + this.inicio_faturacao + " | Fim: " + this.fim_faturacao + " | Período: " + inicio_faturacao.until(fim_faturacao, ChronoUnit.DAYS) +
                 " dia(s)\nConsumo: " + this.consumo+
-                " kWh\nValor: " + this.custo+" €";
+                " kWh\nValor: " + this.custo+" €\n";
 
     }
 

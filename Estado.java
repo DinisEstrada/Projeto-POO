@@ -64,20 +64,26 @@ public class Estado implements Serializable {
         return forns;
     }
 
-    public void setDate(int dia, int mes, int ano) {
-        this.date = LocalDate.of(ano, mes, dia);
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public void setFornecedores(HashMap<String, Fornecedor> fornecedores) throws EstadoException {
+        this.fornecedores = new HashMap<>();
         for(Fornecedor ent : fornecedores.values()){
             adicionaFornecedor(ent);
         }
     }
 
     public void setCasas(HashMap<String, CasaInteligente> casas) throws EstadoException {
+        this.casas = new HashMap<>();
         for(CasaInteligente ent : casas.values()){
             adicionaCasa(ent);
         }
+    }
+
+    public void replaceCasa(CasaInteligente casa) {
+        this.casas.replace(casa.getID(), casa.clone());
     }
 
     public boolean equals(Object obj) {
@@ -180,27 +186,28 @@ public class Estado implements Serializable {
         return set_casas;
     }
 
-    public TreeSet<Fatura> faturasFornecedor(Fornecedor forn) {
+    
+    public TreeSet<Fatura> faturasFornecedor(Fornecedor forn, LocalDate inicio, LocalDate fim) {
         TreeSet<Fatura> lista = new TreeSet<>();
 
         this.casas.values().stream().filter(a-> a.getFornecedor().getName().equals(forn.getName())).forEach(a -> {
             try {
-                lista.add(a.faturaCasa("19-10-2022","20-10-2022").clone());
+                lista.add(a.faturaCasa(inicio,fim).clone());
             } catch (FaturaException | ParseException e) {
                 throw new RuntimeException(e);
             }
         });
         return lista;
     }
+    
 
-
-    public Fornecedor fornecedorMaisFaturou() {
+    public Fornecedor fornecedorMaisFaturou(LocalDate inicio, LocalDate fim) {
         Fornecedor maior = null;
         double consumomaior=0;
         double consumoforn;
 
         for(Fornecedor forn : this.fornecedores.values()){
-            consumoforn =faturasFornecedor(forn).stream().mapToDouble(a-> {
+            consumoforn =faturasFornecedor(forn, inicio, fim).stream().mapToDouble(a-> {
                 return a.valor_fatura();
             }).sum();
            if (consumomaior <  consumoforn) {
@@ -279,7 +286,7 @@ public class Estado implements Serializable {
         this.casas.replace(casa_upd.getID(), casa_upd);
     }
 
-/*Ainda nao esta certo
+
     public void mudaValoresForn(String fornecedor, float valor_energia, float imposto, float desconto) throws EstadoException, CasaInteligenteException, FornecedorException {
         if (!this.fornecedores.containsKey(fornecedor)) throw new EstadoException("Casa não existe");
         Fornecedor f_upd = this.fornecedores.get(fornecedor).clone();
@@ -294,6 +301,6 @@ public class Estado implements Serializable {
             }
         }
     }
-    */
+    
 
 }

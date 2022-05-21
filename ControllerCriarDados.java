@@ -1,5 +1,4 @@
 import java.util.*;
-import java.text.ParseException;
 import ErrorHandling.*;
 
 import java.io.*;
@@ -11,7 +10,7 @@ public class ControllerCriarDados {
             //boolean errorMessage = false;
             while(!exit){
                 int opcao = -1;
-                while(opcao < 0 || opcao > 7) {
+                while(opcao < 0 || opcao > 4) {
                     opcao = Menu.MenuCriarEstado();
                 }
            
@@ -38,16 +37,17 @@ public class ControllerCriarDados {
                     case 2: 
 
                     if (!estado.getCasas().isEmpty()) {
-                        String casa_teste = Menu.menuDispositivo(estado);
+                        System.out.println("------------Menu Dispositivo---------\n\n");
+                        String casa_teste = Menu.escolherCasa(estado).getID();
 
                         if(estado.getCasas().containsKey(casa_teste)) {
                             CasaInteligente casa = estado.getCasas().get(casa_teste);
-                            String room = Menu.menuDispositivo2(casa);
+                            String room = Menu.escolherDivisão(casa);
                             
                             if(casa.getLocations().containsKey(room)) {
                                 DeviceType devicetype = null;
 
-                                while(devicetype == null) devicetype = Menu.menuDispositivo3();
+                                while(devicetype == null) devicetype = Menu.escolherDispositivo();
                             
                                 if(devicetype.equals(DeviceType.SmartBulb)) {
                                         SmartBulb bulb = Menu.menuSmartBulb();
@@ -64,6 +64,8 @@ public class ControllerCriarDados {
                                     try {casa.addDevice(speaker,room);}
                                     catch (CasaInteligenteException e) {System.out.print(e + "\n");}
                                 }
+
+                                estado.replaceCasa(casa);
                             }
                             else {
                                 System.out.println("\nA divisão é inválida");
@@ -124,22 +126,29 @@ public class ControllerCriarDados {
                         String filename = scanner.nextLine();
 
                         Parser file = new Parser(filename);
+ 
                         HashMap<String,CasaInteligente> house;
                         HashMap<String,Fornecedor> fornecedor;
                         
                         try {
-                            house = file.housesConfig(); 
-                            try {estado.setCasas(house);}
-                            catch (EstadoException e) {System.out.print(e + "\n");}
+                            house = file.housesConfig();
+                            for(String name: house.keySet()) {
+                                CasaInteligente casa = house.get(name);
+                                try {estado.adicionaCasa(casa.clone());}
+                                catch (EstadoException e) {System.out.print(e + "\n");}
+                            }
                         }
                         catch(CasaInteligenteException | SmartDeviceException | FornecedorException | SmartBulbException | 
                             ResolutionException | SmartCameraException | 
                             SmartSpeakerException | FileNotFoundException e) {System.out.print(e + "\n");}
 
                         try {
-                            fornecedor = file.energyConfig(); 
-                            try {estado.setFornecedores(fornecedor);}
-                            catch (EstadoException e) {System.out.print(e + "\n");}
+                            fornecedor = file.energyConfig();
+                            for(String forn1: fornecedor.keySet()) {
+                                Fornecedor forns = fornecedor.get(forn1);
+                                try {estado.adicionaFornecedor(forns.clone());}
+                                catch (EstadoException e) {System.out.print(e + "\n");}
+                            }
                         }
                         catch(FileNotFoundException | FornecedorException e) {System.out.print(e + "\n");}
      

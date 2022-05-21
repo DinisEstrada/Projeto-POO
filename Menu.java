@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 public class Menu {
@@ -29,12 +31,6 @@ public class Menu {
         System.out.println("Pressione enter para continuar...");
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
-    }
-    //double to TimeString
-    public static String time(double d){
-        int hour = (int) d;
-        int min = (int)((d-hour)*60);
-        return (hour+":"+ min+" H");
     }
     
     //Tentar encontrar outra forma mais elegante
@@ -61,13 +57,16 @@ public class Menu {
     }
 
 
-    public static int MenuSimulacao() {
+    public static int MenuSimulacao(Estado current) {
         clearWindow();
         StringBuilder sb = new StringBuilder("-----------Menu Simulação -----------\n\n");
+        sb.append("Data atual: " + current.getDate() + "\n\n");
         sb.append("1) Avançar no tempo.\n");
         sb.append("2) Mudar Estado.\n");
         sb.append("3) Estatísticas.\n");
         sb.append("4) Emitir Faturas.\n");
+        sb.append("5) Visualizar casa.\n");
+        sb.append("6) Visualizar Fornecedor.\n");
         sb.append("0) Retroceder.\n\n");
         sb.append("Selecione a opção pretendida: ");
         System.out.println(sb.toString());
@@ -173,24 +172,29 @@ public class Menu {
         return l.get(option);
     }
     
+
     public static Fornecedor menuCriaAlteraFornecedor(Estado estado, Fornecedor forn, boolean criar) {
                 
         Scanner scanner = new Scanner(System.in);
+        String name;
+        Float valor_base, imposto, desconto;
         boolean i; 
 
         if(criar) {
             do { 
                 System.out.print("Introduza o nome do Fornecedor: ");
-                String name = scanner.nextLine();
+                name = scanner.nextLine();
                         
                 try { forn.setName(name); i=false;}
                 catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
             }   while(i); 
         }
+
+        else name = forn.getName();
         
         do {
             System.out.print("Defina o valor base: ");
-            Float valor_base = scanner.nextFloat();
+            valor_base = scanner.nextFloat();
         
             try { forn.setValor_base(valor_base); i=false;}
             catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
@@ -199,7 +203,7 @@ public class Menu {
         
         do {
             System.out.print("Defina o imposto: ");
-            Float imposto = scanner.nextFloat();
+            imposto = scanner.nextFloat();
         
             try { forn.setImposto(imposto); i=false;}
             catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
@@ -207,61 +211,30 @@ public class Menu {
 
         do {
             System.out.print("Defina o desconto: ");
-            Float desconto = scanner.nextFloat();
+            desconto = scanner.nextFloat();
             System.out.print("\n");
 
             try { forn.setDesconto(desconto); i=false;}
             catch (FornecedorException e) {System.out.print(e + "\n"); i = true;}
+        
         } while(i);
+
+
+        if(!criar) {
+            try { estado.mudaValoresForn(name, valor_base, imposto, desconto); i=false;}
+            catch (FornecedorException | CasaInteligenteException | EstadoException e) {System.out.print(e + "\n"); i = true;}
+        }
+
+        else {
+            try {estado.adicionaFornecedor(forn);}
+            catch(EstadoException e) {System.out.print(e + "\n"); i=true;}
+            }
 
        return forn;
             
     }
 
-
-    public static String menuDispositivo(Estado estado) {
-        clearWindow();
-        
-        Scanner scanner = new Scanner(System.in);
-        
-        System.out.println("------------Menu Dispositivo---------\n\n");
-        
-        System.out.println("Lista de casas: ");
-
-        HashMap<String,CasaInteligente> l = estado.getCasas();
-        
-        for(String name: l.keySet()) {  
-            System.out.println(" - " + name);
-        }
-
-        System.out.println("Escolha o id da casa: ");
-        String id = scanner.nextLine();
-        
-        return id;
-    }
-
-
-    public static String menuDispositivo2(CasaInteligente casa) {
-        
-        Scanner scanner = new Scanner(System.in);
-               
-        
-        System.out.println("Lista de divisões: ");
-
-        Map<String,List<String>> l = casa.getLocations();
-        
-        for(String name: l.keySet()) {  
-            System.out.println(" - " + name);
-        }
-
-        System.out.print("Escolha a respetiva divisão: ");
-        String divisao = scanner.nextLine();
-        
-        return divisao;
-    }
-
-
-    public static DeviceType menuDispositivo3() {
+    public static DeviceType escolherDispositivo() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append("Selecione o Dispositivo que pretende criar.\n\n");
@@ -376,7 +349,7 @@ public class Menu {
         System.out.print("Defina o custo de instalação: ");
         Float cust_inst = scanner.nextFloat();
         
-        float consumo = width * height * file_size / 1000;
+        float consumo = width * height * file_size / 10000;
 
         try {smartcamera = new SmartCamera(nome, bool, cust_inst, res, file_size, consumo); i=false;}
         catch (SmartCameraException e) {System.out.print(e + "\n"); i=true;}
@@ -456,6 +429,7 @@ public class Menu {
         StringBuilder sb = new StringBuilder("-----------Menu ON/OFF-----------\n\n");
         sb.append("1) ON/OFF Dispositivo.\n");
         sb.append("2) ON/OFF Todos os Dispositivos da Divisão.\n");
+        sb.append("3) ON/OFF Todos os Dispositivos da Casa.\n");
         sb.append("0) Retroceder.\n\n");
         sb.append("Selecione a opção pretendida: ");
         System.out.println(sb.toString());
@@ -513,7 +487,7 @@ public class Menu {
         
     }
 
-    public static void ONOFFDispositivo(CasaInteligente casa, String room) {
+    public static void ONOFFDispositivo(Estado estado, CasaInteligente casa, String room) {
         
         Scanner scanner = new Scanner(System.in);
         
@@ -539,28 +513,30 @@ public class Menu {
         } while (continuar);
 
         StringBuilder sb = new StringBuilder("O que pretende fazer com o dispositivo " + device_id + "\n\n");
-        sb.append("1) Set to ON.\n");
-        sb.append("2) Set to OFF.\n");
+        sb.append("1) Ligar.\n");
+        sb.append("2) Desligar.\n");
         System.out.println(sb.toString());
         int option = scanner.nextInt();
 
         switch(option) {
             case 1:
-                smtd.turnOn();
+                try {estado.turnDeviceON(casa, smtd.getID());}
+                catch (EstadoException | CasaInteligenteException e) {System.out.print(e + "\n");}
                 break;
             case 2:
-                smtd.turnOff();
+                try {estado.turnDeviceOFF(casa, smtd.getID());}
+                catch (EstadoException | CasaInteligenteException e) {System.out.print(e + "\n");}
                 break;
         }
     }
 
-    public static void ONOFFDivisão(CasaInteligente casa, String room) {
+    public static void ONOFFDivisão(Estado estado, CasaInteligente casa, String room) {
         
         Scanner scanner = new Scanner(System.in);
 
         StringBuilder sb = new StringBuilder("O que pretende fazer com os dispositivos da divisão " + room + "\n\n");
-        sb.append("1) Set all devices ON.\n");
-        sb.append("2) Set all devices OFF.\n");
+        sb.append("1) Ligar todos os dispositivos da divisão.\n");
+        sb.append("2) Desligar todos os dispositivos da divisão.\n");
         System.out.println(sb.toString());
         int option = scanner.nextInt();
 
@@ -572,6 +548,28 @@ public class Menu {
             case 2:
                 try {casa.turnRoomOff(room);}
                 catch (CasaInteligenteException e) {System.out.println(e + "\n");}
+                break;
+        }
+    }
+
+    public static void ONOFFCasa(Estado estado, CasaInteligente casa) {
+        
+        Scanner scanner = new Scanner(System.in);
+
+        StringBuilder sb = new StringBuilder("O que pretende fazer com os dispositivos da casa \n\n");
+        sb.append("1) Desligar tudo.\n");
+        sb.append("2) Ligar tudo.\n");
+        System.out.println(sb.toString());
+        int option = scanner.nextInt();
+
+        switch(option) {
+            case 1:
+                try {estado.turnALLOFF(casa);}
+                catch (CasaInteligenteException | EstadoException e) {System.out.println(e + "\n");}
+                break;
+            case 2:
+                try {estado.turnALLON(casa);;}
+                catch (CasaInteligenteException | EstadoException e) {System.out.println(e + "\n");}
                 break;
         }
     }
@@ -604,22 +602,68 @@ public class Menu {
     }
 
 
-    public static void avancarTempo(Estado estado) {
+    public static LocalDate avancarTempo() {
         
+        int dia,mes,ano;
+        LocalDate date = null;
         Scanner scanner = new Scanner(System.in);
+        boolean i = false;
         
-        System.out.println("Escolha a data a que pretende avançar. ");
-        System.out.println("Dia: ");
-        int dia = scanner.nextInt();
+        do {
+            System.out.println("Escolha a data a que pretende avançar. ");
+            System.out.println("Dia: ");
+            dia = scanner.nextInt();
         
-        System.out.println("Mês: ");
-        int mes = scanner.nextInt();
-        
-        System.out.println("Ano: ");
-        int ano = scanner.nextInt();
+            System.out.println("Mês: ");
+            mes = scanner.nextInt();
+            
+            System.out.println("Ano: ");
+            ano = scanner.nextInt();
+            
+            try {date = LocalDate.of(ano, mes, dia); i=false;}
+            catch (DateTimeException e) {System.out.print(e + "\n"); i=true;}
+        } while(i);
 
-        estado.setDate(dia, mes, ano);
+        
+        return date;
     }
+
+
+    public static int menuEstatisticas() {
+        clearWindow();
+        StringBuilder sb = new StringBuilder("-----------MENU ESTATISTICAS-----------\n\n");
+        sb.append("1) Casa que mais gastou.\n");
+        sb.append("2) Comercializador com maior volume de faturação.\n");
+        sb.append("3) Casas com maior consumo.\n");
+        sb.append("0) Retroceder.\n\n");
+        sb.append("Selecione a opção pretendida: ");
+        System.out.println(sb.toString());
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+    public static int menuEmitirFaturas() {
+        clearWindow();
+        StringBuilder sb = new StringBuilder("-----------MENU EMITIR FATURAS-----------\n\n");
+        sb.append("1) Todas as faturas por fornecedor.\n");
+        sb.append("2) Emitir fatura de uma casa.\n");
+        sb.append("3) Emitir faturas de todas as casas.\n");
+        sb.append("0) Retroceder.\n\n");
+        sb.append("Selecione a opção pretendida: ");
+        System.out.println(sb.toString());
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+
+    public static int escolherNtopCasas() {
+        System.out.print("Escolha o top N de casa: ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+
+    
 
 }
 
