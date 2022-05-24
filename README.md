@@ -5,7 +5,7 @@ No âmbito da cadeira de Programação Orientada a Objetos, o trabalho foi desen
 
 - Tarefa1 : fase de construção. Construir dispositivos(SmartBulb,SmartCamera,SmartBulb), casas e fornecedores de energia. 
 - Tarefa2 : fase de simulação onde se avança no tempo e se tira faturas.
-- Tarefa3 : estatisticas sobre as casas e os fornecedores.
+- Tarefa3 : estatísticas sobre as casas e os fornecedores.
 - Tarefa4 : alterar o estado dos dispositivos (ligado/desligado) e mudar os valores dos fornecedores.
 - Tarefa5 : tirar faturas por cada casa.
 - Tarefa6 : criar uma interface via terminal
