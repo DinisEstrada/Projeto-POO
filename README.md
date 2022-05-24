@@ -12,5 +12,5 @@ No âmbito da cadeira de Programação Orientada a Objetos, o trabalho foi desen
 
 Requisitos impostantes da cadeira são a implementação de __encapsulamento de dados__ e __modularidade__, assim como, o uso de __estruturas de dados e algoritmos__ eficientes. 
 
-Projeto POO | 2ºano | 2ºSemestre | Universidade do Minho | M.I. Engenharia Informática | Ano Letivo 21/22
+Programação Orientada a Objetos | 2ºano | 2ºSemestre | Universidade do Minho | M.I. Engenharia Informática | Ano Letivo 21/22
 
