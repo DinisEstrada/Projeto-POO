@@ -3,12 +3,12 @@
 
 No âmbito da cadeira de Programação Orientada a Objetos, o trabalho foi desenvolvido em Java com o objetivo de gerir e simular um conjunto de dispositivos inteligentes, casas com dispostivos e um mercado de energia. O programa teria de cumprir:
 
-- Tarefa1 : fase de construção. Construir dispositivos(SmartBulb,SmartCamera,SmartBulb), casas e fornecedores de energia. 
-- Tarefa2 : fase de simulação onde se avança no tempo e se tira faturas.
-- Tarefa3 : estatísticas sobre as casas e os fornecedores.
-- Tarefa4 : alterar o estado dos dispositivos (ligado/desligado) e mudar os valores dos fornecedores.
-- Tarefa5 : tirar faturas por cada casa.
-- Tarefa6 : criar uma interface via terminal
+- __Tarefa1__ : fase de construção. Construir dispositivos(SmartBulb,SmartCamera,SmartBulb), casas e fornecedores de energia. 
+- __Tarefa2__ : fase de simulação onde se avança no tempo e se tira faturas.
+- __Tarefa3__ : estatísticas sobre as casas e os fornecedores.
+- __Tarefa4__ : alterar o estado dos dispositivos (ligado/desligado) e mudar os valores dos fornecedores.
+- __Tarefa5__ : tirar faturas por cada casa.
+- __Tarefa6__ : criar uma interface via terminal
 
 Requisitos impostantes da cadeira são a implementação de __encapsulamento de dados__ e __modularidade__, assim como, o uso de __estruturas de dados e algoritmos__ eficientes. 
 
