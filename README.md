@@ -8,7 +8,9 @@ No âmbito da cadeira de Programação Orientada a Objetos, o trabalho foi desen
 - Tarefa3 : estatisticas sobre as casas e os fornecedores.
 - Tarefa4 : alterar o estado dos dispositivos (ligado/desligado) e mudar os valores dos fornecedores.
 - Tarefa5 : tirar faturas por cada casa.
+- Tarefa6 : criar uma interface via terminal
 
+Requisitos impostantes da cadeira são a implementação de __encapsulamento de dados__ e __modularidade__, assim como, o uso de __estruturas de dados e algoritmos__ eficientes. 
 
 Projeto POO | 2ºano | 2ºSemestre | Universidade do Minho | M.I. Engenharia Informática | Ano Letivo 21/22
 
