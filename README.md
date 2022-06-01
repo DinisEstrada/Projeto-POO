@@ -1,4 +1,4 @@
-# Projeto-POO
+# Projeto-POO 💻⚡
 ### Grupo 28 - [José Fonte](https://github.com/josefonte) | [Dinís Estrada](https://github.com/DinisEstrada)
 
 No âmbito da cadeira de Programação Orientada a Objetos, o trabalho foi desenvolvido em Java com o objetivo de gerir e simular um conjunto de dispositivos inteligentes, casas com dispostivos e um mercado de energia. O programa teria de cumprir:
