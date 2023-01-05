@@ -10,7 +10,7 @@ No âmbito da cadeira de Programação Orientada a Objetos, o trabalho foi desen
 - __Tarefa5__ : tirar faturas por cada casa.
 - __Tarefa6__ : criar uma interface via terminal
 
-Requisitos impostantes da cadeira são a implementação dos princípios de poo como: __herança__, __classes abstratas__ , __hereditariedade__ , __encapsulamento de dados__, __abordagem V-M-C__, assim como, o uso de __estruturas de dados e algoritmos__ eficientes. 
+Requisitos importantes da cadeira são a implementação dos princípios de POO como: __herança__, __classes abstratas__ , __hereditariedade__ , __encapsulamento de dados__, __abordagem V-M-C__, assim como, o uso de __estruturas de dados e algoritmos__ eficientes. 
 
 Programação Orientada a Objetos | 2ºano | 2ºSemestre | Universidade do Minho | M.I. Engenharia Informática | Ano Letivo 21/22
 
